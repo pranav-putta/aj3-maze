@@ -7,18 +7,19 @@ from torch.distributions import Categorical
 from torch.distributions import MultivariateNormal
 
 from aj3.agents.agent import Agent, PolicyOutput
+from aj3.configs import MazeArguments
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 
 class PPOAgent(Agent):
-    def __init__(self, env, network, epsilon=0.2, value_coef=0.5, entropy_coef=0.01):
+    def __init__(self, env, network, cfg: MazeArguments):
         super().__init__(env)
         self.env = env
         self.net = network
-        self.epsilon = epsilon
-        self.value_coef = value_coef
-        self.entropy_coef = entropy_coef
+        self.epsilon = cfg.train.epsilon
+        self.value_coef = cfg.train.value_coef
+        self.entropy_coef = cfg.train.entropy_coef
         self.optimizer = optim.Adam(self.net.parameters(), lr=1e-3)
 
     def act(self, state):

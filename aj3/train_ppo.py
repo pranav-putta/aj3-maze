@@ -24,7 +24,7 @@ def main():
 
     network = MazeNet(cfg, critic=True).to(device)
     print('Running training on device: {}'.format(device))
-    agent = PPOAgent(env, network)
+    agent = PPOAgent(env, network, cfg)
 
     # Training loop
     num_episodes = cfg.train.num_episodes
