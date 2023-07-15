@@ -34,7 +34,7 @@ class PPOAgent(Agent):
         actions = torch.tensor(np.array(actions)).long()
         log_probs = torch.tensor(log_probs).float()
         returns = torch.tensor(returns).float()
-        advantages = torch.tensor(advantages).float()
+        # advantages = torch.tensor(advantages).float()
 
         logits, values = self.net(states)
         dist = Categorical(logits=logits)

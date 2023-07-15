@@ -65,7 +65,8 @@ def main():
                 advantages.insert(0, G - agent.net(s[None,])[1])
 
         # Normalize advantages
-        advantages = (advantages - np.mean(advantages)) / (np.std(advantages) + 1e-8)
+        advantages = torch.tensor(advantages, device=device)
+        advantages = (advantages - torch.mean(advantages)) / (torch.std(advantages) + 1e-8)
 
         # Update the policy
         agent.update_policy(states, actions, log_probs, returns, advantages)
