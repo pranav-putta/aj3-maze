@@ -1,3 +1,5 @@
+import time
+
 import numpy as np
 import torch
 from mltoolkit import parse_config
@@ -37,6 +39,7 @@ def main():
         log_probs = []
         rewards = []
 
+        start = time.time()
         for i in range(env._max_episode_steps):
             action_output = agent.act(state[None,])
             action, log_prob = action_output.action, action_output.log_prob
@@ -52,7 +55,10 @@ def main():
             if done:
                 results.append((i + 1, i < env._max_episode_steps - 1))
                 break
+        end = time.time()
+        print(f'Episode {episode + 1} took {end - start} seconds')
 
+        start = time.time()
         # Compute advantages and returns
         with torch.no_grad():
             returns = []
@@ -70,6 +76,8 @@ def main():
 
         # Update the policy
         agent.update_policy(states, actions, log_probs, returns, advantages)
+        end = time.time()
+        print(f'Update {episode + 1} took {end - start} seconds')
 
         if (episode + 1) % 100 == 0:
             avg_num_steps, avg_success_rate = compute_stats(results)
