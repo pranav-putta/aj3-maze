@@ -417,3 +417,9 @@ class DungeonRooms(MazeGenAlgo):
             tuple: position of a cell half-way between the two given
         """
         return ((a[0] + b[0]) // 2, (a[1] + b[1]) // 2)
+
+
+def generate_nbyn(N):
+    d = DungeonRooms(N, N)
+    out = d.generate()
+    np.save('../data/maze.npy', out)

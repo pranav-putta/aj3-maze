@@ -9,6 +9,8 @@ from aj3.eval import evaluate_and_store_mp4
 from aj3.net import MazeNet
 from aj3.train import setup_seed, setup_gym, compute_stats
 
+device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+
 
 def setup():
     cfg = MazeArguments(**parse_config('configs/maze.yaml'))
@@ -20,7 +22,8 @@ def setup():
 def main():
     cfg, env = setup()
 
-    network = MazeNet(cfg, critic=True)
+    network = MazeNet(cfg, critic=True).to(device)
+    print('Running training on device: {}'.format(device))
     agent = PPOAgent(env, network)
 
     # Training loop
@@ -35,7 +38,8 @@ def main():
         rewards = []
 
         for i in range(env._max_episode_steps):
-            action, log_prob, value = agent.act(state[None,])
+            action_output = agent.act(state[None,])
+            action, log_prob = action_output.action, action_output.log_prob
             next_state, reward, done, _ = env.step(action)
 
             states.append(state)
@@ -79,8 +83,8 @@ def main():
     total_reward = 0
     done = False
     while not done:
-        action, _, _ = agent.act(state[None,])
-        state, reward, done, _ = env.step(action)
+        output = agent.act(state[None,])
+        state, reward, done, _ = env.step(output.action)
         total_reward += reward
 
     print(f"Total reward: {total_reward}")

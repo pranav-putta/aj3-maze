@@ -6,7 +6,7 @@ from torch import optim
 from torch.distributions import Categorical
 from torch.distributions import MultivariateNormal
 
-from aj3.agents.agent import Agent
+from aj3.agents.agent import Agent, PolicyOutput
 
 
 class PPOAgent(Agent):
@@ -25,7 +25,9 @@ class PPOAgent(Agent):
         dist = Categorical(logits=logits)
         action = dist.sample()
         log_prob = dist.log_prob(action)
-        return action.item(), log_prob, value
+        return PolicyOutput(action=action.item(),
+                            log_prob=log_prob.item(),
+                            value=value.item())
 
     def update_policy(self, states, actions, log_probs, returns, advantages):
         states = torch.tensor(np.array(states)).long()

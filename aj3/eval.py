@@ -26,8 +26,8 @@ def evaluate_and_store_mp4(env, agent, filename):
     state = env.reset()
     while not done:
         frames.append(Image.fromarray(env.render(mode='rgb_array')))
-        action, dist, _ = agent.act(state[None,])
-        state, _, done, _ = env.step(action)
+        policy_output = agent.act(state[None,])
+        state, _, done, _ = env.step(policy_output.action)
 
         img = env.render(mode='rgb_array')
         frames.append(img)
