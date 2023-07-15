@@ -10,11 +10,11 @@ device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 class MazeNet(nn.Module):
     def __init__(self, cfg: MazeArguments):
         super().__init__()
-        N = cfg.agent_visibility
+        self.N = max(cfg.agent_visibility, cfg.size)
         self.tok_embd = nn.Embedding(cfg.num_objects + 3, 16)
         self.conv1 = nn.Conv2d(16, 8, kernel_size=3, stride=1, padding=1)
         self.conv2 = nn.Conv2d(8, 4, kernel_size=3, stride=1, padding=1)
-        self.gru = nn.GRU(N * N * 4, 16, num_layers=2, batch_first=True)
+        self.gru = nn.GRU(self.N * self.N * 4, 16, num_layers=2, batch_first=True)
         self.action_head = nn.Linear(16, 4)
         self.cfg = cfg
 

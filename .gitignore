@@ -7,3 +7,11 @@ aj3/.DS_Store
 *.pyc
 .idea/ChatGPTCopilotChannelManager.xml
 .idea/workspace.xml
+.idea/
+*.xml
+.idea/workspace.xml
+.idea/vcs.xml
+.idea/misc.xml
+.idea/jupyter-settings.xml
+.idea/inspectionProfiles/Project_Default.xml
+.idea/inspectionProfiles/profiles_settings.xml

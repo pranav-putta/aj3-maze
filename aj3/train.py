@@ -81,6 +81,8 @@ def main():
             results = []
             evaluate_and_store_mp4(env, agent, f'videos/{episode + 1}.mp4')
 
+    evaluate_and_store_mp4(env, agent, f'videos/final.mp4')
+
 
 if __name__ == '__main__':
     main()

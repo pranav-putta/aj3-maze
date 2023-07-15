@@ -77,6 +77,8 @@ class Maze(BaseMaze):
         return centered_grid
 
     def to_value(self):
+        if self.cfg.agent_visibility == -1:
+            return super().to_value()
         return self.center_grid_around_agent(super().to_value(), self.cfg.agent_visibility)
 
 

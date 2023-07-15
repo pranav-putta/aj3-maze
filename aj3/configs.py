@@ -13,5 +13,6 @@ class MazeArguments(GeneralArguments):
     num_objects: int = field(default=1)
     agent_visibility: int = field(default=3)
     verbose: bool = field(default=True)
+    size: int = field(default=5)
 
     train: TrainingArguments
