@@ -5,9 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3fd3be82-1a90-4f79-91f4-bdb2d6f44b80" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/aj3/agents/ppo.py" beforeDir="false" afterPath="$PROJECT_DIR$/aj3/agents/ppo.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/aj3/train_ppo.py" beforeDir="false" afterPath="$PROJECT_DIR$/aj3/train_ppo.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -139,7 +137,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1689456798012</updated>
-      <workItem from="1689456799135" duration="4206000" />
+      <workItem from="1689456799135" duration="4312000" />
     </task>
     <servers />
   </component>

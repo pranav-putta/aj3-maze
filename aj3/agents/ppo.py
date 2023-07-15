@@ -8,6 +8,8 @@ from torch.distributions import MultivariateNormal
 
 from aj3.agents.agent import Agent, PolicyOutput
 
+device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+
 
 class PPOAgent(Agent):
     def __init__(self, env, network, epsilon=0.2, value_coef=0.5, entropy_coef=0.01):
@@ -30,10 +32,10 @@ class PPOAgent(Agent):
                             value=value.item())
 
     def update_policy(self, states, actions, log_probs, returns, advantages):
-        states = torch.tensor(np.array(states)).long()
-        actions = torch.tensor(np.array(actions)).long()
-        log_probs = torch.tensor(log_probs).float()
-        returns = torch.tensor(returns).float()
+        states = torch.tensor(np.array(states), device=device).long()
+        actions = torch.tensor(np.array(actions), device=device).long()
+        log_probs = torch.tensor(log_probs, device=device).float()
+        returns = torch.tensor(returns, device=device).float()
         # advantages = torch.tensor(advantages).float()
 
         logits, values = self.net(states)
