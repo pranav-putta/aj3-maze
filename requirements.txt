@@ -1,6 +1,5 @@
 numpy~=1.25.1
 gym~=0.15.3
-mltoolkit~=0.1.44
 cython~=0.29.36
 torch~=2.0.1
 einops~=0.6.1
