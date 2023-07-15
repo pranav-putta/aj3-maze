@@ -39,26 +39,23 @@ def main():
         log_probs = []
         rewards = []
 
-        start = time.time()
-        for i in range(env._max_episode_steps):
-            action_output = agent.act(state[None,])
-            action, log_prob = action_output.action, action_output.log_prob
-            next_state, reward, done, _ = env.step(action)
+        with torch.no_grad():
+            for i in range(env._max_episode_steps):
+                action_output = agent.act(state[None,])
+                action, log_prob = action_output.action, action_output.log_prob
+                next_state, reward, done, _ = env.step(action)
 
-            states.append(state)
-            actions.append(action)
-            log_probs.append(log_prob)
-            rewards.append(reward)
+                states.append(state)
+                actions.append(action)
+                log_probs.append(log_prob)
+                rewards.append(reward)
 
-            state = next_state
+                state = next_state
 
-            if done:
-                results.append((i + 1, i < env._max_episode_steps - 1))
-                break
-        end = time.time()
-        print(f'Episode {episode + 1} took {end - start} seconds')
+                if done:
+                    results.append((i + 1, i < env._max_episode_steps - 1))
+                    break
 
-        start = time.time()
         # Compute advantages and returns
         with torch.no_grad():
             returns = []
@@ -76,8 +73,6 @@ def main():
 
         # Update the policy
         agent.update_policy(states, actions, log_probs, returns, advantages)
-        end = time.time()
-        print(f'Update {episode + 1} took {end - start} seconds')
 
         if (episode + 1) % 100 == 0:
             avg_num_steps, avg_success_rate = compute_stats(results)
