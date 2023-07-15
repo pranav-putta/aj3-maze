@@ -1,0 +1,9 @@
+
+aj3.egg-info/dependency_links.txt
+aj3.egg-info/PKG-INFO
+aj3.egg-info/SOURCES.txt
+aj3.egg-info/top_level.txt
+aj3/.DS_Store
+*.pyc
+.idea/ChatGPTCopilotChannelManager.xml
+.idea/workspace.xml
