@@ -1,5 +1,5 @@
 num_objects: 2
-agent_visibility: 3
+agent_visibility: 15
 seed: 10
 
 train:
