@@ -8,7 +8,7 @@ device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 
 class MazeNet(nn.Module):
-    def __init__(self, cfg: MazeArguments):
+    def __init__(self, cfg: MazeArguments, critic=False):
         super().__init__()
         self.N = max(cfg.agent_visibility, cfg.size)
         self.tok_embd = nn.Embedding(cfg.num_objects + 3, 16)
@@ -17,6 +17,9 @@ class MazeNet(nn.Module):
         self.gru = nn.GRU(self.N * self.N * 4, 16, num_layers=2, batch_first=True)
         self.action_head = nn.Linear(16, 4)
         self.cfg = cfg
+
+        if critic:
+            self.critic_head = nn.Linear(16, 1)
 
     def forward(self, x):
         b, n, _ = x.shape
@@ -27,6 +30,11 @@ class MazeNet(nn.Module):
         x = self.conv1(x)
         x = self.conv2(x)
         x = x.flatten(1)
-        x, _ = self.gru(x)
-        x = self.action_head(x)
-        return x
+        logits, _ = self.gru(x)
+        action_dist = self.action_head(logits)
+
+        if getattr(self, 'critic_head', None) is not None:
+            value = self.critic_head(logits)
+            return action_dist, value
+        else:
+            return action_dist

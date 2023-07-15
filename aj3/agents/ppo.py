@@ -20,20 +20,22 @@ class PPOAgent(Agent):
         self.optimizer = optim.Adam(self.net.parameters(), lr=1e-3)
 
     def act(self, state):
-        state = torch.from_numpy(state).float()
-        dist, value = self.net(state[None,])
+        state = torch.from_numpy(state).long()
+        logits, value = self.net(state)
+        dist = Categorical(logits=logits)
         action = dist.sample()
         log_prob = dist.log_prob(action)
         return action.item(), log_prob, value
 
     def update_policy(self, states, actions, log_probs, returns, advantages):
-        states = torch.tensor(states).long()
-        actions = torch.tensor(actions).long()
+        states = torch.tensor(np.array(states)).long()
+        actions = torch.tensor(np.array(actions)).long()
         log_probs = torch.tensor(log_probs).float()
         returns = torch.tensor(returns).float()
         advantages = torch.tensor(advantages).float()
 
-        dist, values = self.net(states)
+        logits, values = self.net(states)
+        dist = Categorical(logits=logits)
         new_log_probs = dist.log_prob(actions)
         ratio = torch.exp(new_log_probs - log_probs)
 

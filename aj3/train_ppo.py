@@ -1,5 +1,7 @@
 import numpy as np
+import torch
 from mltoolkit import parse_config
+from tqdm import tqdm
 
 from aj3.agents.ppo import PPOAgent
 from aj3.configs import MazeArguments
@@ -18,13 +20,13 @@ def setup():
 def main():
     cfg, env = setup()
 
-    network = MazeNet(cfg)
+    network = MazeNet(cfg, critic=True)
     agent = PPOAgent(env, network)
 
     # Training loop
     num_episodes = cfg.train.num_episodes
     results = []
-    for episode in range(num_episodes):
+    for episode in tqdm(range(num_episodes)):
         state = env.reset()
 
         states = []
@@ -33,7 +35,7 @@ def main():
         rewards = []
 
         for i in range(env._max_episode_steps):
-            action, log_prob, value = agent.act(state)
+            action, log_prob, value = agent.act(state[None,])
             next_state, reward, done, _ = env.step(action)
 
             states.append(state)
@@ -48,13 +50,15 @@ def main():
                 break
 
         # Compute advantages and returns
-        returns = []
-        advantages = []
-        G = 0
-        for t in reversed(range(len(rewards))):
-            G = rewards[t] + 0.99 * G  # Discount factor (gamma)
-            returns.insert(0, G)
-            advantages.insert(0, G - agent.net(states[t])[1])
+        with torch.no_grad():
+            returns = []
+            advantages = []
+            G = 0
+            for t in reversed(range(len(rewards))):
+                G = rewards[t] + 0.99 * G  # Discount factor (gamma)
+                returns.insert(0, G)
+                s = torch.from_numpy(states[t]).long()
+                advantages.insert(0, G - agent.net(s[None,])[1])
 
         # Normalize advantages
         advantages = (advantages - np.mean(advantages)) / (np.std(advantages) + 1e-8)
@@ -68,14 +72,14 @@ def main():
             results = []
             evaluate_and_store_mp4(env, agent, f'videos/{episode + 1}.mp4')
 
-        evaluate_and_store_mp4(env, agent, f'videos/final.mp4')
+    evaluate_and_store_mp4(env, agent, f'videos/final.mp4')
 
     # Evaluate the agent
     state = env.reset()
     total_reward = 0
     done = False
     while not done:
-        action, _, _ = agent.act(state)
+        action, _, _ = agent.act(state[None,])
         state, reward, done, _ = env.step(action)
         total_reward += reward
 
