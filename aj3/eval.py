@@ -8,7 +8,7 @@ import cv2
 def frames_to_mp4(frames, filename):
     """Save a list of frames as an mp4 file."""
     videodims = frames[0].size
-    fourcc = cv2.VideoWriter_fourcc(*'avc1')
+    fourcc = cv2.VideoWriter_fourcc(*'mp4v')
     video = cv2.VideoWriter(filename, fourcc, 60, videodims)
     # draw stuff that goes on every frame here
     for frame in frames:
