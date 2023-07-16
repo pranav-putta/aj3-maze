@@ -6,7 +6,7 @@ from aj3.maze.generator import DungeonRooms
 
 
 def generate_dungeon():
-    d = DungeonRooms(5, 5)
+    d = DungeonRooms(3, 3)
     out = d.generate()
     np.save('../data/maze.npy', out)
 

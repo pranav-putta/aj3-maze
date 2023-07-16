@@ -5,7 +5,17 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3fd3be82-1a90-4f79-91f4-bdb2d6f44b80" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/aj3/agents/ppo.py" beforeDir="false" afterPath="$PROJECT_DIR$/aj3/agents/ppo.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/aj3/configs.py" beforeDir="false" afterPath="$PROJECT_DIR$/aj3/configs.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/aj3/configs/maze.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/aj3/configs/maze.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/aj3/data/maze.npy" beforeDir="false" afterPath="$PROJECT_DIR$/aj3/data/maze.npy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/aj3/eval.py" beforeDir="false" afterPath="$PROJECT_DIR$/aj3/eval.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/aj3/maze/maze.py" beforeDir="false" afterPath="$PROJECT_DIR$/aj3/maze/maze.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/aj3/maze/maze_tests.py" beforeDir="false" afterPath="$PROJECT_DIR$/aj3/maze/maze_tests.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/aj3/net.py" beforeDir="false" afterPath="$PROJECT_DIR$/aj3/net.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/aj3/train_ppo.py" beforeDir="false" afterPath="$PROJECT_DIR$/aj3/train_ppo.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/aj3/videos/final.mp4" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -21,6 +31,10 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$USER_HOME$/mambaforge/envs/aj3-maze/lib/python3.9/multiprocessing/reduction.py" root0="SKIP_INSPECTION" />
+    <setting file="file://$USER_HOME$/mambaforge/envs/aj3-maze/lib/python3.9/site-packages/torch/nn/modules/rnn.py" root0="SKIP_INSPECTION" />
   </component>
   <component name="ProjectId" id="2ScrdUib8Z1E8d27MYqAzAbbIpb" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
@@ -124,8 +138,8 @@
     <recent_temporary>
       <list>
         <item itemvalue="Python.train_ppo" />
-        <item itemvalue="Python.train" />
         <item itemvalue="Python.maze_tests" />
+        <item itemvalue="Python.train" />
       </list>
     </recent_temporary>
   </component>
@@ -149,13 +163,36 @@
       <path value="$PROJECT_DIR$/mazelab" />
     </ignored-roots>
   </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/aj3/train.py</url>
+          <line>34</line>
+          <option name="timeStamp" value="42" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/aj3/train_ppo.py</url>
+          <line>46</line>
+          <option name="timeStamp" value="43" />
+        </line-breakpoint>
+      </breakpoints>
+      <default-breakpoints>
+        <breakpoint type="python-exception">
+          <properties notifyOnTerminate="true" exception="BaseException">
+            <option name="notifyOnTerminate" value="true" />
+          </properties>
+        </breakpoint>
+      </default-breakpoints>
+    </breakpoint-manager>
+  </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/aj3_maze$mazetest.coverage" NAME="train Coverage Results" MODIFIED="1689456349781" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/aj3" />
     <SUITE FILE_PATH="coverage/aj3_maze$test.coverage" NAME="test Coverage Results" MODIFIED="1689448477988" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/aj3/notebooks" />
     <SUITE FILE_PATH="coverage/aj3_maze$maze.coverage" NAME="maze Coverage Results" MODIFIED="1689448531841" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/aj3" />
-    <SUITE FILE_PATH="coverage/aj3_maze$maze_tests.coverage" NAME="maze_tests Coverage Results" MODIFIED="1689457598194" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/aj3/maze" />
+    <SUITE FILE_PATH="coverage/aj3_maze$maze_tests.coverage" NAME="maze_tests Coverage Results" MODIFIED="1689482266249" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/aj3/maze" />
     <SUITE FILE_PATH="coverage/aj3_maze$train.coverage" NAME="train Coverage Results" MODIFIED="1689457658784" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/aj3" />
-    <SUITE FILE_PATH="coverage/aj3_maze$train_ppo.coverage" NAME="train_ppo Coverage Results" MODIFIED="1689463234557" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/aj3" />
+    <SUITE FILE_PATH="coverage/aj3_maze$train_ppo.coverage" NAME="train_ppo Coverage Results" MODIFIED="1689483030750" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/aj3" />
     <SUITE FILE_PATH="coverage/aj3_maze$main.coverage" NAME="main Coverage Results" MODIFIED="1689448463362" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/aj3_maze$eval.coverage" NAME="eval Coverage Results" MODIFIED="1689451580421" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/aj3" />
     <SUITE FILE_PATH="coverage/aj3_maze$.coverage" NAME=" Coverage Results" MODIFIED="1689455956741" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/aj3/maze" />

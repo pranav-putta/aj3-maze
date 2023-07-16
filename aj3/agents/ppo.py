@@ -13,13 +13,12 @@ device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 
 class PPOAgent(Agent):
-    def __init__(self, env, network, cfg: MazeArguments):
+    def __init__(self, env, network, epsilon, value_coef, entropy_coef):
         super().__init__(env)
-        self.env = env
         self.net = network
-        self.epsilon = cfg.train.epsilon
-        self.value_coef = cfg.train.value_coef
-        self.entropy_coef = cfg.train.entropy_coef
+        self.epsilon = epsilon
+        self.value_coef = value_coef
+        self.entropy_coef = entropy_coef
         self.optimizer = optim.Adam(self.net.parameters(), lr=1e-3)
 
     def act(self, state):
@@ -28,16 +27,16 @@ class PPOAgent(Agent):
         dist = Categorical(logits=logits)
         action = dist.sample()
         log_prob = dist.log_prob(action)
-        return PolicyOutput(action=action.item(),
-                            log_prob=log_prob.item(),
-                            value=value.item())
+        return PolicyOutput(action=action.squeeze(),
+                            log_prob=log_prob.squeeze(),
+                            value=value.squeeze())
 
     def update_policy(self, states, actions, log_probs, returns, advantages):
-        states = torch.tensor(np.array(states), device=device).long()
-        actions = torch.tensor(np.array(actions), device=device).long()
-        log_probs = torch.tensor(log_probs, device=device).float()
-        returns = torch.tensor(returns, device=device).float()
-        # advantages = torch.tensor(advantages).float()
+        states = states.to(device)
+        actions = actions.to(device)
+        log_probs = log_probs.to(device)
+        returns = returns.to(device)
+        advantages = advantages.to(device)
 
         logits, values = self.net(states)
         dist = Categorical(logits=logits)

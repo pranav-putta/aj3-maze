@@ -3,6 +3,7 @@ import random
 import numpy as np
 
 from aj3.configs import MazeArguments
+from aj3.maze.generator import DungeonRooms
 from mazelab import BaseMaze
 from mazelab import Object
 from mazelab import DeepMindColor as color
@@ -18,9 +19,6 @@ from gym.spaces import Discrete
 
 from mltoolkit.argparser import parse_config
 
-x = np.load('data/maze.npy')
-start_idx = [[8, 6]]
-goal_idx = [[1, 1]]
 goal_object = 0
 
 
@@ -34,15 +32,24 @@ class Maze(BaseMaze):
 
     def __init__(self, config):
         self.cfg = config
+        self.grid = None
+        self.generate_maze()
+
         super().__init__()
+
+    def generate_maze(self):
+        np.random.seed(self.cfg.seed)
+        random.seed(self.cfg.seed)
+        grid = DungeonRooms(self.cfg.size // 2, self.cfg.size // 2)
+        self.grid = grid.generate()
 
     @property
     def size(self):
-        return x.shape
+        return self.grid.shape
 
     def make_objects(self):
-        free = Object('free', 0, color.free, False, np.stack(np.where(x == 0), axis=1))
-        obstacle = Object('obstacle', 1, color.obstacle, True, np.stack(np.where(x == 1), axis=1))
+        free = Object('free', 0, color.free, False, np.stack(np.where(self.grid == 0), axis=1))
+        obstacle = Object('obstacle', 1, color.obstacle, True, np.stack(np.where(self.grid == 1), axis=1))
         agent = Object('agent', 2, color.agent, False, [])
 
         color_vals = list(object_colors.values())
@@ -123,12 +130,12 @@ class Env(BaseEnv):
         return self.maze.to_value(), reward, done, {}
 
     def reset(self):
-        indices = np.argwhere(x == 0)
+        indices = np.argwhere(self.maze.grid == 0)
         indices = indices.tolist()
         random.seed(self.cfg.seed)
         random.shuffle(indices)
 
-        self.agent.positions = start_idx
+        self.agent.positions = [indices.pop()]
 
         # randomly place objects in locations
         for i, obj in enumerate(self.maze.objects):

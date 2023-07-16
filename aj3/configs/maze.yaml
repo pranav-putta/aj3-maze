@@ -1,11 +1,14 @@
 num_objects: 1
-agent_visibility: 5
-size: 11
+agent_visibility: -1
+size: 7
 seed: 10
-max_env_steps: 100
+max_env_steps: 75
+log_every: 50
 
 train:
   num_episodes: 1000
   value_coef: 0.5
   entropy_coef: 0.01
   epsilon: 0.2
+  max_steps: 500
+  num_envs: 2

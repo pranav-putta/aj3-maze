@@ -24,19 +24,20 @@ class MazeNet(nn.Module):
             self.critic_head = nn.Linear(16, 1)
 
     def forward(self, x):
-        b, n, _ = x.shape
+        b, t, n, _ = x.shape
         x = x.to(device)
-        x = rearrange(x, 'b x y -> b (x y)')
+        x = rearrange(x, 'b t x y -> b t (x y)')
         x = self.tok_embd(x)
-        x = rearrange(x, 'b (x y) d -> b d x y', x=n, y=n)
+        x = rearrange(x, 'b t (x y) d -> (b t) d x y', x=n, y=n)
         x = self.conv1(x)
         x = self.conv2(x)
         x = x.flatten(1)
+        x = rearrange(x, '(b t) d -> b t d', b=b)
         logits, _ = self.gru(x)
         action_dist = self.action_head(logits)
 
         if getattr(self, 'critic_head', None) is not None:
-            value = self.critic_head(logits)
+            value = self.critic_head(logits).squeeze(-1)
             return action_dist, value
         else:
             return action_dist
