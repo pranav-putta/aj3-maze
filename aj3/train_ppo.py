@@ -99,14 +99,14 @@ def main():
     results = []
 
     pbar = tqdm(total=num_episodes)
-    for episode in range(0, num_episodes, cfg.train.num_envs):
+    for i, episode in enumerate(range(0, num_episodes, cfg.train.num_envs)):
         states, actions, log_probs, returns, advantages, result = collect_episodes_multiple_envs(envs, agent, cfg)
         results.extend(result)
 
         # Update the policy
         agent.update_policy(states, actions, log_probs, returns, advantages)
 
-        if (episode + 1) % cfg.log_every == 0:
+        if (i + 1) % cfg.log_every == 0:
             avg_num_steps, avg_success_rate = compute_stats(results)
             print(f'Episode: {episode + 1}, Avg. num steps: {avg_num_steps}, Avg. success rate: {avg_success_rate}')
             results = []

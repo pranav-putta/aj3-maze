@@ -5,6 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3fd3be82-1a90-4f79-91f4-bdb2d6f44b80" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/aj3/configs/maze.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/aj3/configs/maze.yaml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/aj3/train_ppo.py" beforeDir="false" afterPath="$PROJECT_DIR$/aj3/train_ppo.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
