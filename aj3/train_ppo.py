@@ -97,7 +97,9 @@ def main():
     # Training loop
     num_episodes = cfg.train.num_episodes
     results = []
-    for episode in tqdm(range(0, num_episodes, cfg.train.num_envs)):
+
+    pbar = tqdm.tqdm(total=num_episodes)
+    for episode in range(0, num_episodes, cfg.train.num_envs):
         states, actions, log_probs, returns, advantages, result = collect_episodes_multiple_envs(envs, agent, cfg)
         results.extend(result)
 
@@ -109,6 +111,8 @@ def main():
             print(f'Episode: {episode + 1}, Avg. num steps: {avg_num_steps}, Avg. success rate: {avg_success_rate}')
             results = []
             evaluate_and_store_mp4(envs[0], agent, f'videos/{episode + 1}.mp4')
+
+        pbar.update(cfg.train.num_envs)
 
     evaluate_and_store_mp4(envs[0], agent, f'videos/final.mp4')
 
