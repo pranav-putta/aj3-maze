@@ -76,7 +76,7 @@ def collect_episodes_multiple_envs(envs, agent, cfg: MazeArguments):
     for t in reversed(range(num_steps)):
         G = rewards[:, t:t + 1] + 0.99 * G  # Discount factor (gamma)
         returns.append(G)
-        advantages.append(G - agent.net(states[:, t:t + 1])[1])
+        advantages.append(G - agent.net(states[:, t:t + 1])[1].cpu())
 
     returns = torch.flip(torch.stack(returns).transpose(1, 0), dims=(1,)).squeeze(-1)
     advantages = torch.flip(torch.stack(advantages).transpose(1, 0), dims=(1,)).squeeze(-1)
