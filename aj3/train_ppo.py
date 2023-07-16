@@ -64,8 +64,8 @@ def collect_episodes_multiple_envs(envs, agent, cfg: MazeArguments):
 
     # restructure data to be of shape (num_envs, num_steps, ...)
     states = torch.tensor(np.array(states)).transpose(1, 0)
-    actions = torch.tensor(actions).transpose(1, 0)
-    log_probs = torch.tensor(log_probs).transpose(1, 0)
+    actions = torch.stack(actions).transpose(1, 0)
+    log_probs = torch.stack(log_probs).transpose(1, 0)
     rewards = torch.tensor(rewards).transpose(1, 0)
 
     # compute advantages and returns
