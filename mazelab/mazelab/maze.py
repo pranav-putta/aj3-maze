@@ -29,11 +29,11 @@ class BaseMaze(ABC):
 
     def _convert(self, x, name):
         for obj in self.objects:
-            pos = np.asarray(obj.positions)
+            pos = np.asarray(list(obj.positions))
             x[pos[:, 0], pos[:, 1]] = getattr(obj, name, None)
 
         # do agent object last to ensure it is on top
-        pos = np.asarray(self.objects.agent.positions)
+        pos = np.asarray(list(self.objects.agent.positions))
         x[pos[:, 0], pos[:, 1]] = getattr(self.objects.agent, name, None)
 
         return x

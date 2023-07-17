@@ -1,0 +1,26 @@
+seed: 15
+log_every: 50
+trainer_name: "reinforce"
+net_name: "simple"
+
+env:
+  max_steps: 50
+  num_objects: 1
+  agent_visibility: -1
+  grid_size: 7
+  reward_type: 'distance_to_goal'
+  difficulty: "medium"
+
+train:
+  num_steps: 10000
+  value_coef: 0.1
+  entropy_coef: 0.01
+  epsilon: 0.2
+  max_steps: 50
+  num_envs: 40
+  hidden_size: 8
+  embd_dim: 8
+  lr: 0.01
+  ppo_epochs: 4
+  gru_layers: 2
+  gamma: 0.99

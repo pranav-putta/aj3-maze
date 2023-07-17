@@ -5,10 +5,33 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3fd3be82-1a90-4f79-91f4-bdb2d6f44b80" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/aj3/agents/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/aj3/arial.ttf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/aj3/configs/ppo.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/aj3/configs/reinforce_easy.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/aj3/maze/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/aj3/nets/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/aj3/nets/blocks.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/aj3/nets/impala.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/aj3/nets/myopic.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/aj3/nets/net.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/aj3/nets/simple.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/aj3/rewards.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/aj3/storage.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/aj3/util.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/aj3/configs/maze.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/aj3/configs/maze.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/aj3/agents/agent.py" beforeDir="false" afterPath="$PROJECT_DIR$/aj3/agents/agent.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/aj3/agents/ppo.py" beforeDir="false" afterPath="$PROJECT_DIR$/aj3/agents/ppo.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/aj3/agents/reinforce.py" beforeDir="false" afterPath="$PROJECT_DIR$/aj3/agents/reinforce.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/aj3/configs.py" beforeDir="false" afterPath="$PROJECT_DIR$/aj3/configs.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/aj3/configs/maze.yaml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/aj3/eval.py" beforeDir="false" afterPath="$PROJECT_DIR$/aj3/eval.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/aj3/train_ppo.py" beforeDir="false" afterPath="$PROJECT_DIR$/aj3/train_ppo.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/aj3/maze/maze.py" beforeDir="false" afterPath="$PROJECT_DIR$/aj3/maze/maze.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/aj3/net.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/aj3/train.py" beforeDir="false" afterPath="$PROJECT_DIR$/aj3/train.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/aj3/train_ppo.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/mazelab/mazelab/maze.py" beforeDir="false" afterPath="$PROJECT_DIR$/mazelab/mazelab/maze.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -35,34 +58,36 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/Users/pranavputta/GitHub/aj3-maze&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;project.propVCSSupport.DirectoryMappings&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "WebServerToolWindowFactoryState": "true",
+    "git-widget-placeholder": "main",
+    "last_opened_file_path": "/Users/pranavputta/GitHub/aj3-maze/aj3/configs",
+    "node.js.detected.package.eslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "settings.editor.selected.configurable": "com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/aj3/configs" />
+      <recent name="$PROJECT_DIR$/aj3" />
       <recent name="$PROJECT_DIR$" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/aj3/nets" />
       <recent name="$PROJECT_DIR$" />
       <recent name="$PROJECT_DIR$/aj3" />
       <recent name="$PROJECT_DIR$/aj3/agents" />
       <recent name="$PROJECT_DIR$/aj3/maze" />
-      <recent name="$PROJECT_DIR$/aj3/configs" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.train_ppo">
-    <configuration name="maze_tests" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+  <component name="RunManager" selected="Python.local train_ppo ">
+    <configuration default="true" type="PythonConfigurationType" factoryName="Python">
       <module name="aj3-maze" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -70,13 +95,36 @@
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
       <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/aj3/maze" />
-      <option name="IS_MODULE_SDK" value="true" />
+      <option name="WORKING_DIRECTORY" value="" />
+      <option name="IS_MODULE_SDK" value="false" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/aj3/maze/maze_tests.py" />
+      <option name="SCRIPT_NAME" value="" />
       <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="true" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="local train_ppo " type="PythonConfigurationType" factoryName="Python">
+      <module name="aj3-maze" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="$USER_HOME$/mambaforge/envs/aj3-maze/bin/python" />
+      <option name="SDK_NAME" value="aj3-maze" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/aj3" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/aj3/train.py" />
+      <option name="PARAMETERS" value="--config configs/ppo.yaml --no_gpu" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
       <option name="MODULE_MODE" value="false" />
@@ -98,7 +146,7 @@
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/aj3/train.py" />
-      <option name="PARAMETERS" value="" />
+      <option name="PARAMETERS" value="--config ./configs/reinforce_easy.yaml" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
       <option name="MODULE_MODE" value="false" />
@@ -106,33 +154,13 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="train_ppo" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
-      <module name="aj3-maze" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/aj3" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/aj3/train_ppo.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
+    <list>
+      <item itemvalue="Python.local train_ppo " />
+      <item itemvalue="Python.train_ppo" />
+    </list>
     <recent_temporary>
       <list>
         <item itemvalue="Python.train_ppo" />
-        <item itemvalue="Python.maze_tests" />
-        <item itemvalue="Python.train" />
       </list>
     </recent_temporary>
   </component>
@@ -145,6 +173,7 @@
       <option name="presentableId" value="Default" />
       <updated>1689456798012</updated>
       <workItem from="1689456799135" duration="4312000" />
+      <workItem from="1689484353872" duration="57423000" />
     </task>
     <servers />
   </component>
@@ -160,14 +189,9 @@
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/aj3/train.py</url>
-          <line>34</line>
-          <option name="timeStamp" value="42" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/aj3/train_ppo.py</url>
-          <line>66</line>
-          <option name="timeStamp" value="44" />
+          <url>file://$PROJECT_DIR$/aj3/storage.py</url>
+          <line>83</line>
+          <option name="timeStamp" value="222" />
         </line-breakpoint>
       </breakpoints>
       <default-breakpoints>
@@ -185,7 +209,8 @@
     <SUITE FILE_PATH="coverage/aj3_maze$maze.coverage" NAME="maze Coverage Results" MODIFIED="1689448531841" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/aj3" />
     <SUITE FILE_PATH="coverage/aj3_maze$maze_tests.coverage" NAME="maze_tests Coverage Results" MODIFIED="1689482266249" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/aj3/maze" />
     <SUITE FILE_PATH="coverage/aj3_maze$train.coverage" NAME="train Coverage Results" MODIFIED="1689457658784" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/aj3" />
-    <SUITE FILE_PATH="coverage/aj3_maze$train_ppo.coverage" NAME="train_ppo Coverage Results" MODIFIED="1689483755996" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/aj3" />
+    <SUITE FILE_PATH="coverage/aj3_maze$local_train_ppo_.coverage" NAME="local train_ppo  Coverage Results" MODIFIED="1689569629021" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/aj3" />
+    <SUITE FILE_PATH="coverage/aj3_maze$train_ppo.coverage" NAME="train_ppo Coverage Results" MODIFIED="1689547981190" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/aj3" />
     <SUITE FILE_PATH="coverage/aj3_maze$main.coverage" NAME="main Coverage Results" MODIFIED="1689448463362" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/aj3_maze$eval.coverage" NAME="eval Coverage Results" MODIFIED="1689451580421" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/aj3" />
     <SUITE FILE_PATH="coverage/aj3_maze$.coverage" NAME=" Coverage Results" MODIFIED="1689455956741" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/aj3/maze" />
