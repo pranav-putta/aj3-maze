@@ -20,11 +20,6 @@ from aj3.util.util import dijkstra_distance
 goal_object = 0
 
 
-def hex_to_rgb(color_code):
-    r, g, b = int(color_code[1:3], 16), int(color_code[3:5], 16), int(color_code[5:7], 16)
-    return r, g, b
-
-
 class Maze(BaseMaze):
     cfg: MazeArguments
 
@@ -61,30 +56,6 @@ class Maze(BaseMaze):
 
         return objs
 
-    def center_grid_around_agent(self, grid, n):
-        agent_coords = np.argwhere(grid == 2)  # Find the coordinates of the agent (assuming it is labeled as 2)
-
-        if len(agent_coords) == 0:
-            raise ValueError("Agent not found in the grid.")
-
-        agent_row, agent_col = agent_coords[0]
-
-        # Calculate padding size
-        padding = n // 2
-
-        # Create a new padded grid
-        padded_grid = np.pad(grid, padding, mode='constant')
-
-        # Calculate the center coordinates of the new grid
-        center_row = agent_row + padding
-        center_col = agent_col + padding
-
-        # Extract the n x n grid centered around the agent
-        centered_grid = padded_grid[center_row - padding: center_row + padding + 1,
-                        center_col - padding: center_col + padding + 1]
-
-        return centered_grid
-
     def to_value(self):
         return super().to_value()
 
@@ -109,30 +80,8 @@ class Env(BaseEnv):
     def goal(self):
         return self.maze.objects[goal_object + 3]
 
-    def update_grid(self, agent_last_pos, agent_new_pos, valid):
-        if not valid:
-            return
-        for object in self.maze.objects:
-            if agent_last_pos in object.positions:
-                self.current_grid[agent_last_pos[0], agent_last_pos[1]] = object.value
-        self.current_grid[agent_new_pos[0], agent_new_pos[1]] = self.agent.value
-
-    def step(self, action):
-        motion = self.motions[action]
-        current_position = self.maze.objects.agent.positions[0]
-        new_position = (current_position[0] + motion[0], current_position[1] + motion[1])
-        valid = self._is_valid(new_position)
-        success = self._is_goal(new_position)
-        if valid:
-            self.maze.objects.agent.positions = [new_position]
-
-        reward = self.reward(new_position, valid, success)
-        self.update_grid(current_position, new_position, valid)
-        agent_view = self.get_agent_view()
-        return agent_view, reward, success, {'valid': valid,
-                                             'success': self._is_goal(new_position)}
-
-    def info(self):
+    @property
+    def best_action(self):
         dist_map = self.distance_map
         agent_pos = self.maze.objects.agent.positions[0]
 
@@ -140,30 +89,61 @@ class Env(BaseEnv):
         best_action = min(range(len(next_positions)), key=lambda x: dist_map[next_positions[x]])
         return best_action
 
-    def get_agent_view(self):
-        if self.cfg.env.agent_visibility == -1:
+    @property
+    def agent_viewj(self):
+        radius = self.cfg.env.agent_visibility
+        if radius == -1:
             return self.current_grid
         else:
-            return self.maze.center_grid_around_agent(self.current_grid, self.cfg.env.agent_visibility)
+            x, y = self.maze.objects.agent.positions[0]
+            agent_view = self.current_grid[x - radius:x + radius + 1, y - radius:y + radius + 1]
+            return agent_view
+
+    def update_grid(self, agent_last_pos, agent_new_pos, valid):
+
+    def step(self, action):
+        motion = self.motions[action]
+        current_position = self.maze.objects.agent.positions[0]
+        new_position = (current_position[0] + motion[0], current_position[1] + motion[1])
+
+        valid = self._is_valid(new_position)
+        success = self._is_goal(new_position)
+
+        # if step was a valid move, update the grid
+        if valid:
+            self.maze.objects.agent.positions = [new_position]
+            for object in self.maze.objects:
+                if current_position in object.positions:
+                    self.current_grid[agent_last_pos[0], agent_last_pos[1]] = object.value
+            self.current_grid[agent_new_pos[0], agent_new_pos[1]] = self.agent.value
+
+        reward = self.reward_fn(new_position, valid, success)
+
+        agent_view = self.get_agent_view()
+
+        return agent_view, reward, success, {'valid': valid,
+                                             'success': success,  # include success separately bc timeout
+                                             'best_action': self.get_best_next_action()}
 
     def reset(self):
+        # 1. find all free positions and place objects in random spots
         indices = np.argwhere(self.maze.grid == 0)
         indices = indices.tolist()
         if self.cfg.env.static_env:
             random.seed(self.cfg.seed)
         random.shuffle(indices)
 
-        # randomly place objects in locations
         for i, obj in enumerate(self.maze.objects):
             if 'obj' in obj.name:
                 obj.positions = [tuple(indices[i])]
 
+        # 2. compute the distance map
         self.distance_map = dijkstra_distance(pickle.dumps(self.maze.grid), pickle.dumps(self.goal.positions))
         self.max_distance = torch.max(torch.masked_fill(self.distance_map, torch.isinf(self.distance_map), -1))
 
-        # place agent based on difficulty
+        # 3. place agent in a random spot based on difficulty
         if self.cfg.env.difficulty == 'easy':
-            min_dist = 1
+            min_dist = 0
             max_dist = int(0.2 * self.max_distance)
         elif self.cfg.env.difficulty == 'medium':
             min_dist = int(0.4 * self.max_distance)
@@ -175,18 +155,26 @@ class Env(BaseEnv):
             raise ValueError('Invalid difficulty')
 
         for idx in indices:
-            if min_dist <= self.distance_map[idx[0], idx[1]] <= max_dist:
+            if min_dist < self.distance_map[idx[0], idx[1]] <= max_dist:
                 self.maze.objects.agent.positions = [tuple(idx)]
                 break
 
+        # 4. set up the reward function
         if self.cfg.env.reward_type == 'sparse':
-            self.reward = SparseReward()
+            self.reward_fn = SparseReward()
         elif self.cfg.env.reward_type == 'distance_to_goal':
-            self.reward = DistanceToGoalReward(self.distance_map, list(self.agent.positions)[0])
+            self.reward_fn = DistanceToGoalReward(self.distance_map, list(self.agent.positions)[0])
         else:
             raise ValueError('Invalid reward type')
 
+        # 5. create the grid
         self.current_grid = self.maze.to_value().copy()
+
+        # 6. pad maze according to agent visibility
+        if self.cfg.env.agent_visibility != -1:
+            self.current_grid = np.pad(self.current_grid, self.cfg.env.agent_visibility, mode='constant',
+                                       constant_values=1)
+
         return self.get_agent_view()
 
     def _is_valid(self, position):

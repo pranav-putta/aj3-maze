@@ -96,7 +96,7 @@ class PPOAgent(Agent):
                 self.optimizer.zero_grad()
                 total_loss.backward()
 
-                # nn.utils.clip_grad_norm_(self.parameters(), self.cfg.train.max_grad_norm)
+                nn.utils.clip_grad_norm_(self.parameters(), self.cfg.train.max_grad_norm)
                 self.optimizer.step()
 
     def parameters(self):
