@@ -8,7 +8,7 @@ from aj3.policy.policy import Policy
 
 class MyopicPolicyNet(Policy):
     def __init__(self, cfg: MazeArguments):
-        super().__init__()
+        super().__init__(cfg)
         self.cfg = cfg
 
         self.N = cfg.env.agent_visibility if cfg.env.agent_visibility != -1 else cfg.env.grid_size

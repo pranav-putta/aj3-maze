@@ -3,8 +3,8 @@ from einops import rearrange
 from torch import nn
 
 from aj3.util.configs import MazeArguments
-from aj3.nets.focal_loss import FocalLoss
-from aj3.nets.gpt import GPT
+from aj3.policy.modules.focal_loss import FocalLoss
+from aj3.policy.modules.gpt import GPT
 from aj3.policy.policy import Policy
 
 

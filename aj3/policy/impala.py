@@ -4,7 +4,7 @@ from einops import rearrange
 from torch import nn
 
 from aj3.util.configs import MazeArguments
-from aj3.nets.blocks import ImpalaModel
+from aj3.policy.modules.blocks import ImpalaModel
 from aj3.policy.policy import Policy
 
 

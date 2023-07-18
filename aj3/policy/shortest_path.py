@@ -1,11 +1,9 @@
 import torch
-from einops import rearrange
 from mazelab import VonNeumannMotion
 
 from aj3.agents.agent import PolicyOutput
 from aj3.policy.policy import Policy
 from aj3.util.configs import MazeArguments
-from aj3.util.storage import RolloutStorage
 
 
 class ShortestPathPolicy(Policy):

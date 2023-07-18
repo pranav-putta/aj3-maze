@@ -1,11 +1,9 @@
-import torch
-from aj3.agents.agent import PolicyOutput
 from einops import rearrange
 from torch import nn
-from torch.distributions import Categorical
 
-from aj3.util.configs import MazeArguments
+from aj3.agents.agent import PolicyOutput
 from aj3.policy.policy import Policy
+from aj3.util.configs import MazeArguments
 
 
 class SimplePolicyNet(Policy):

@@ -5,10 +5,8 @@ from aj3.agents.agent import PolicyOutput
 from einops import rearrange
 from torch import nn
 
-from aj3.nets.blocks import ImpalaModel
+from aj3.policy.modules import ImpalaModel, FocalLoss, GPT
 from aj3.util.configs import MazeArguments
-from aj3.nets.focal_loss import FocalLoss
-from aj3.nets.gpt import GPT
 from aj3.policy.policy import Policy
 
 
