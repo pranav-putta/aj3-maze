@@ -5,17 +5,73 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3fd3be82-1a90-4f79-91f4-bdb2d6f44b80" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/aj3/nets/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/aj3/policy/modules/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/aj3/nets/blocks.py" beforeDir="false" afterPath="$PROJECT_DIR$/aj3/policy/modules/blocks.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/aj3/nets/focal_loss.py" beforeDir="false" afterPath="$PROJECT_DIR$/aj3/policy/modules/focal_loss.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/aj3/nets/gpt.py" beforeDir="false" afterPath="$PROJECT_DIR$/aj3/policy/modules/gpt.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/aj3/policy/dt.py" beforeDir="false" afterPath="$PROJECT_DIR$/aj3/policy/dt.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/aj3/policy/impala.py" beforeDir="false" afterPath="$PROJECT_DIR$/aj3/policy/impala.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/aj3/policy/myopic.py" beforeDir="false" afterPath="$PROJECT_DIR$/aj3/policy/myopic.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/aj3/policy/rtg_dt.py" beforeDir="false" afterPath="$PROJECT_DIR$/aj3/policy/rtg_dt.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/aj3/policy/shortest_path.py" beforeDir="false" afterPath="$PROJECT_DIR$/aj3/policy/shortest_path.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/aj3/policy/simple.py" beforeDir="false" afterPath="$PROJECT_DIR$/aj3/policy/simple.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/aj3/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/aj3/agents/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/aj3/agents/agent.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/aj3/agents/alg.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/aj3/agents/bc.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/aj3/agents/ppo.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/aj3/agents/reinforce.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/aj3/arial.ttf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/aj3/critic.pt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/aj3/policy.pt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/aj3/policy/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/aj3/policy/dt.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/aj3/policy/impala.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/aj3/policy/modules/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/aj3/policy/modules/blocks.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/aj3/policy/modules/focal_loss.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/aj3/policy/modules/gpt.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/aj3/policy/myopic.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/aj3/policy/policy.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/aj3/policy/rtg_dt.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/aj3/policy/shortest_path.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/aj3/policy/simple.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/aj3/train.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/aj3/train_bc.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/aj3/train_bc_ppo.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/aj3/util/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/aj3/util/colors.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/aj3/util/configs.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/aj3/util/rewards.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/aj3/util/storage.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/aj3/util/util.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/configs/bc_dt_rtg.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/configs/bc_oracle.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/configs/ppo.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/mazelab/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/mazelab/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/mazelab/examples/DoubleTMaze-v0.gif" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/mazelab/examples/MorrisWaterMaze-v0.gif" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/mazelab/examples/RandomMaze-v0.gif" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/mazelab/examples/RandomShapeMaze-v0.gif" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/mazelab/examples/SimpleEmptyMaze-v0.gif" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/mazelab/examples/UMaze-v0.gif" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/mazelab/examples/navigation_env.ipynb" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/mazelab/mazelab/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/mazelab/mazelab/color_style.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/mazelab/mazelab/env.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/mazelab/mazelab/generators/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/mazelab/mazelab/generators/double_t_maze.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/mazelab/mazelab/generators/morris_water_maze.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/mazelab/mazelab/generators/random_maze.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/mazelab/mazelab/generators/random_shape_maze.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/mazelab/mazelab/generators/t_maze.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/mazelab/mazelab/generators/u_maze.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/mazelab/mazelab/maze.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/mazelab/mazelab/motion.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/mazelab/mazelab/object.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/mazelab/mazelab/solvers/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/mazelab/mazelab/solvers/dijkstra_solver.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/mazelab/requirements.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/mazelab/setup.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/mazelab/test/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/output.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/setup.cfg" beforeDir="false" afterPath="$PROJECT_DIR$/setup.cfg" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -48,7 +104,7 @@
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "WebServerToolWindowFactoryState": "true",
     "git-widget-placeholder": "main",
-    "last_opened_file_path": "/Users/pranavputta/GitHub/aj3-maze",
+    "last_opened_file_path": "/Users/pranavputta/GitHub/maze-lens",
     "node.js.detected.package.eslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
@@ -227,6 +283,7 @@
       <workItem from="1689484353872" duration="77440000" />
       <workItem from="1689612469658" duration="51480000" />
       <workItem from="1689692780701" duration="1924000" />
+      <workItem from="1689697364155" duration="35000" />
     </task>
     <servers />
   </component>
