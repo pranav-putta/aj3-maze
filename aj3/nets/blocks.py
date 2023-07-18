@@ -106,26 +106,24 @@ class ImpalaBlock(nn.Module):
         return x
 
 
-scale = 1
-
-
 class ImpalaModel(nn.Module):
     def __init__(self,
                  in_channels,
                  in_dim,
                  out_dim,
+                 scale,
                  **kwargs):
         super(ImpalaModel, self).__init__()
-        self.block1 = ImpalaBlock(in_channels=in_channels, out_channels=16 * scale)
-        self.block2 = ImpalaBlock(in_channels=16 * scale, out_channels=32 * scale)
-        self.block3 = ImpalaBlock(in_channels=32 * scale, out_channels=32 * scale)
+        self.block1 = ImpalaBlock(in_channels=in_channels, out_channels=int(16 * scale))
+        self.block2 = ImpalaBlock(in_channels=int(16 * scale), out_channels=int(32 * scale))
+        self.block3 = ImpalaBlock(in_channels=int(32 * scale), out_channels=int(32 * scale))
 
         # compute output feature dimension
         in_dim = in_dim - in_dim // 2
         in_dim = in_dim - in_dim // 2
         in_dim = in_dim - in_dim // 2
 
-        self.fc = nn.Linear(in_features=32 * scale * in_dim ** 2, out_features=out_dim)
+        self.fc = nn.Linear(in_features=int(32 * scale) * in_dim ** 2, out_features=out_dim)
 
         self.output_dim = 256
         self.apply(xavier_uniform_init)

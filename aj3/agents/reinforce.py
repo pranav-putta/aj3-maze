@@ -1,7 +1,7 @@
 import torch
 
 from aj3.agents.agent import Agent
-from aj3.storage import RolloutStorage
+from aj3.util.storage import RolloutStorage
 
 
 class REINFORCEAgent(Agent):

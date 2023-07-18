@@ -3,26 +3,19 @@ import random
 
 import numpy as np
 import torch
-
-from aj3.configs import MazeArguments
-from aj3.maze.generator import DungeonRooms
-from aj3.rewards import SparseReward, DistanceToGoalReward
-from mazelab import BaseMaze
-from mazelab import Object
-from mazelab import DeepMindColor as color
-from mazelab.color_style import object_colors
-from mazelab.generators import double_t_maze
-
-from mazelab import BaseEnv
-from mazelab import VonNeumannMotion
-
-import gym
 from gym.spaces import Box
 from gym.spaces import Discrete
+from mazelab import BaseEnv
+from mazelab import BaseMaze
+from mazelab import DeepMindColor as color
+from mazelab import Object
+from mazelab import VonNeumannMotion
 
-from mltoolkit.argparser import parse_config
-
-from aj3.util import dijkstra_distance
+from aj3.util.configs import MazeArguments
+from aj3.maze.generator import Kruskal
+from aj3.util.rewards import SparseReward, DistanceToGoalReward
+from aj3.util.colors import object_colors
+from aj3.util.util import dijkstra_distance
 
 goal_object = 0
 
@@ -45,7 +38,7 @@ class Maze(BaseMaze):
     def generate_maze(self):
         np.random.seed(self.cfg.seed)
         random.seed(self.cfg.seed)
-        grid = DungeonRooms(self.cfg.env.grid_size // 2, self.cfg.env.grid_size // 2)
+        grid = Kruskal(self.cfg.env.grid_size // 2, self.cfg.env.grid_size // 2)
         self.grid = grid.generate()
 
     @property
@@ -58,7 +51,7 @@ class Maze(BaseMaze):
         agent = Object('agent', 2, color.agent, False, [])
 
         color_vals = list(object_colors.values())
-        items = [Object(f'obj{i}', i + 3, hex_to_rgb(color_vals[i + 3]), False, []) for i in
+        items = [Object(f'obj{i}', i + 3, (color_vals[i + 3]), False, []) for i in
                  range(self.cfg.env.num_objects)]
         items[goal_object].impassable = False
 
@@ -93,17 +86,14 @@ class Maze(BaseMaze):
         return centered_grid
 
     def to_value(self):
-        if self.cfg.env.agent_visibility == -1:
-            return super().to_value()
-        return self.center_grid_around_agent(super().to_value(), self.cfg.env.agent_visibility)
+        return super().to_value()
 
 
 class Env(BaseEnv):
     def __init__(self, cfg: MazeArguments):
         super().__init__()
-
         self.cfg = cfg
-        self.maze = Maze(cfg)
+        self.maze = Maze(self.cfg)
         self.motions = VonNeumannMotion()
         self.current_grid = None
         self.distance_map = None
@@ -119,7 +109,9 @@ class Env(BaseEnv):
     def goal(self):
         return self.maze.objects[goal_object + 3]
 
-    def update_grid(self, agent_last_pos, agent_new_pos):
+    def update_grid(self, agent_last_pos, agent_new_pos, valid):
+        if not valid:
+            return
         for object in self.maze.objects:
             if agent_last_pos in object.positions:
                 self.current_grid[agent_last_pos[0], agent_last_pos[1]] = object.value
@@ -135,13 +127,30 @@ class Env(BaseEnv):
             self.maze.objects.agent.positions = [new_position]
 
         reward = self.reward(new_position, valid, success)
-        self.update_grid(current_position, new_position)
-        return self.current_grid, reward, success, {'valid': valid, 'success': self._is_goal(new_position)}
+        self.update_grid(current_position, new_position, valid)
+        agent_view = self.get_agent_view()
+        return agent_view, reward, success, {'valid': valid,
+                                             'success': self._is_goal(new_position)}
+
+    def info(self):
+        dist_map = self.distance_map
+        agent_pos = self.maze.objects.agent.positions[0]
+
+        next_positions = [(agent_pos[0] + motion[0], agent_pos[1] + motion[1]) for motion in self.motions]
+        best_action = min(range(len(next_positions)), key=lambda x: dist_map[next_positions[x]])
+        return best_action
+
+    def get_agent_view(self):
+        if self.cfg.env.agent_visibility == -1:
+            return self.current_grid
+        else:
+            return self.maze.center_grid_around_agent(self.current_grid, self.cfg.env.agent_visibility)
 
     def reset(self):
         indices = np.argwhere(self.maze.grid == 0)
         indices = indices.tolist()
-        random.seed(self.cfg.seed)
+        if self.cfg.env.static_env:
+            random.seed(self.cfg.seed)
         random.shuffle(indices)
 
         # randomly place objects in locations
@@ -178,7 +187,7 @@ class Env(BaseEnv):
             raise ValueError('Invalid reward type')
 
         self.current_grid = self.maze.to_value().copy()
-        return self.current_grid
+        return self.get_agent_view()
 
     def _is_valid(self, position):
         nonnegative = position[0] >= 0 and position[1] >= 0

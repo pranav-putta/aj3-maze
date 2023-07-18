@@ -5,6 +5,8 @@ import torch
 from torch import optim
 from torch.distributions import Categorical
 
+from aj3.util.storage import RolloutStorage
+
 
 @dataclass
 class PolicyOutput:
@@ -20,20 +22,6 @@ class Agent(abc.ABC):
         self.env = env
         self.cfg = cfg
         self.policy = network
-        self.optimizer = optim.Adam(self.policy.parameters(), lr=cfg.train.lr)
-
-    def act(self, state, hx=None):
-        state = state.long()[:, None]
-        features, action_logits, hx = self.policy(state, hx=hx)
-        features, action_logits = features.squeeze(1), action_logits.squeeze(1)
-        dist = Categorical(logits=action_logits)
-        action = dist.sample()
-        log_prob = dist.log_prob(action)
-
-        return PolicyOutput(action=action,
-                            log_prob=log_prob.squeeze(-1),
-                            features=features,
-                            hidden_state=hx)
 
     @abc.abstractmethod
     def update_policy(self, rollouts):
@@ -42,3 +30,43 @@ class Agent(abc.ABC):
     def to(self, device):
         self.policy.to(device)
         return self
+
+    def parameters(self):
+        return self.policy.parameters()
+
+    def save(self, path):
+        torch.save(self.policy.state_dict(), path)
+
+    def act(self, state=None, reward=None, action=None, hx=None):
+        return self.policy.act(state=state, reward=reward, action=action, hx=hx)
+
+    def collect_episodes(self, envs):
+        num_steps = self.cfg.train.max_steps
+        rollouts = RolloutStorage(self.cfg)
+
+        curr_state = envs.reset()
+        curr_rwd, curr_act = None, None
+        hidden_state = self.policy.initial_hidden_state()
+        for i in range(num_steps):
+            curr_state = torch.tensor(curr_state, dtype=torch.long)
+            policy_out = self.act(state=curr_state, reward=curr_rwd, action=curr_act, hx=hidden_state)
+            acts = policy_out.action.cpu()
+            next_states, rwds, dones, infos = envs.step(acts.cpu().numpy())
+
+            success = [info['success'] for info in infos]
+            valids = [info['valid'] for info in infos]
+
+            rollouts.insert(curr_state, acts, policy_out.log_prob, rwds, dones, hidden_state, success, valids)
+
+            curr_state = next_states
+            curr_act = acts.clone()
+            curr_rwd = torch.tensor(rwds, dtype=torch.float)
+            hidden_state = policy_out.hidden_state
+            if type(hidden_state) == torch.Tensor:
+                hidden_state *= ~torch.tensor(dones, device=self.cfg.device).repeat(self.cfg.train.gru_layers,
+                                                                                    self.cfg.train.hidden_size,
+                                                                                    1).transpose(1, 2)
+
+        # push the last state in the rollouts
+        rollouts.states.append(torch.tensor(curr_state, dtype=torch.long))
+        return rollouts

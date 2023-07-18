@@ -1,26 +1,33 @@
-seed: 153
+seed: 1
 log_every: 50
 trainer_name: "ppo"
-net_name: "simple"
+net_name: "impala"
+exp_dir: 'exps/ppo_impala'
 
 env:
   max_steps: 50
   num_objects: 1
   agent_visibility: -1
-  grid_size: 7
+  grid_size: 9
   reward_type: 'distance_to_goal'
   difficulty: 'hard'
+  static_env: False
 
 train:
-  num_steps: 10000
+  scale: 1
+  num_steps: 100000
   value_coef: 0.5
-  entropy_coef: 0.01
+  entropy_coef: 0.05
   epsilon: 0.2
   max_steps: 50
   num_envs: 40
-  hidden_size: 64
-  embd_dim: 64
-  lr: 0.01
+  hidden_size: 256
+  embd_dim: 32
+  lr: 0.001
   ppo_epochs: 2
   gru_layers: 2
   gamma: 0.99
+  deterministic: False
+  num_minibatches: 2
+  use_gae: True
+#  max_grad_norm: 0.5

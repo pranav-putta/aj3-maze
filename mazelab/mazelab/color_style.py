@@ -15,24 +15,13 @@ class DeepMindColor:
 
 
 object_colors = {
-    "Apricot": "#FBB982",
-    "Aqua": "#00FFFF",
-    "Azure": "#007FFF",
-    "Blush": "#DE5D83",
-    "Coral": "#FF7F50",
-    "Crimson": "#DC143C",
-    "Emerald": "#50C878",
-    "Goldenrod": "#DAA520",
-    "Lavender": "#E6E6FA",
-    "Magenta": "#FF00FF",
-    "Mint": "#98FF98",
-    "Peach": "#FFDAB9",
-    "Periwinkle": "#CCCCFF",
-    "Rose": "#FF007F",
-    "Saffron": "#F4C430",
-    "Sapphire": "#0F52BA",
-    "Scarlet": "#FF2400",
-    "Silver": "#C0C0C0",
-    "Teal": "#008080",
-    "Turquoise": "#40E0D0"
+    0: (160, 160, 160),  # obstacle
+    1: (224, 224, 224),  # free
+    2: (51, 153, 255),  # agent
+    3: (51, 255, 51),  # goal
+    4: (102, 0, 204),  # button
+    5: (255, 0, 255),  # interruption
+    6: (0, 102, 102),  # box
+    7: (255, 0, 0),  # lava
+    8: (0, 0, 255),  # water
 }
