@@ -1,0 +1,5 @@
+defaults:
+  - base_maze
+  - _self_
+
+size: [9, 9]

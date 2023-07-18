@@ -1,0 +1,6 @@
+env:
+  _target_: mazelens.util.construct_maze_env
+  image_only_obs: false
+  top_camera: false
+  size: 9x9
+num_environments: 1

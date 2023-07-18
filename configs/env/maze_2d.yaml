@@ -1,0 +1,7 @@
+defaults:
+  - base_maze
+  - _self_
+
+_target_: mazelens.envs.Maze2DEnv
+image_only_obs: False
+top_camera: False

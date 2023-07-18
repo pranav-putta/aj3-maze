@@ -1,0 +1,22 @@
+[2023-07-18 16:28:53,271][absl][INFO] - MUJOCO_GL=glfw, attempting to import specified OpenGL backend.
+[2023-07-18 16:28:53,773][absl][INFO] - MuJoCo library version is: 2.3.6
+[2023-07-18 16:31:09,521][hydra.utils][ERROR] - Error getting class at {'_target_': 'mazelens.envs.MazeEnv', 'env_id': 'Maze-v1', 'size': [9, 9], 'image_only_obs': False, 'top_camera': False, 'global_observables': True}: Key 'split' not in 'MazeEnvConfig'
+    full_key: env.split
+    reference_type=MazeEnvConfig
+    object_type=MazeEnvConfig
+[2023-07-18 16:31:24,815][hydra.utils][ERROR] - Error getting class at {'_target_': 'mazelens.envs.MazeEnv', 'env_id': 'Maze-v1', 'size': [9, 9], 'image_only_obs': False, 'top_camera': False, 'global_observables': True}: Key 'split' not in 'MazeEnvConfig'
+    full_key: env.split
+    reference_type=MazeEnvConfig
+    object_type=MazeEnvConfig
+[2023-07-18 16:32:31,800][hydra.utils][ERROR] - Error getting class at {'_target_': 'mazelens.envs.MazeEnv', 'env_id': 'Maze-v1', 'size': [9, 9], 'image_only_obs': False, 'top_camera': False, 'global_observables': True}: Key 'split' not in 'MazeEnvConfig'
+    full_key: env.split
+    reference_type=MazeEnvConfig
+    object_type=MazeEnvConfig
+[2023-07-18 16:32:37,931][hydra.utils][ERROR] - Error getting class at {'_target_': 'mazelens.envs.MazeEnv', 'env_id': 'Maze-v1', 'size': [9, 9], 'image_only_obs': False, 'top_camera': False, 'global_observables': True}: Key 'split' not in 'MazeEnvConfig'
+    full_key: env.split
+    reference_type=MazeEnvConfig
+    object_type=MazeEnvConfig
+[2023-07-18 16:32:53,665][hydra.utils][ERROR] - Error getting class at {'_target_': 'mazelens.envs.MazeEnv', 'env_id': 'Maze-v1', 'size': [9, 9], 'image_only_obs': False, 'top_camera': False, 'global_observables': True}: Key 'split' not in 'MazeEnvConfig'
+    full_key: env.split
+    reference_type=MazeEnvConfig
+    object_type=MazeEnvConfig

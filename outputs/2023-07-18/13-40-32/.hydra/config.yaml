@@ -1,0 +1,7 @@
+name: global
+env:
+  _target_: gym_maze.envs.maze_env.MazeEnv
+  image_only_obs: true
+  top_camera: true
+  camera_resolution: 64
+  discrete_actions: true
