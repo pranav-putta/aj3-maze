@@ -5,18 +5,18 @@ defaults:
   - /trainer: base_ad_trainer
     # teacher
   - /agent@trainer.teacher_agent: base_ppo_agent
-  - /net@trainer.teacher_agent.policy: base_simple_net
+  - /net@trainer.teacher_agent.policy: base_impala_net
   - /net@trainer.teacher_agent.critic: base_linear_head
     # student
   - /agent@trainer.agent: base_bc_agent
-  - /net@trainer.agent.policy: base_simple_net
+  - /net@trainer.agent.policy: base_decision_transformer_net
   - _self_
 
 seed: 1
 
 trainer:
   epochs: 1000
-  num_environments: 4
+  num_environments: 32
   num_rollout_steps: 50
   eval_frequency: 50
 
@@ -33,19 +33,25 @@ trainer:
       in_dim: ${trainer.env.size[0]}
       embd_vocab_size: 4
       embd_dim: 64
-      hidden_dim: 64
+      hidden_dim: 256
       out_dim: 4
-      rnn_layers: 2
+      layers: 2
+      attn_heads: 4
+      scale: 1
+
+    lr: 1e-3
+
   teacher_agent:
     policy:
       in_dim: ${trainer.env.size[0]}
       embd_vocab_size: 4
       embd_dim: 64
-      hidden_dim: 64
+      hidden_dim: 256
       out_dim: 4
       rnn_layers: 2
+      scale: 1
     critic:
-      in_features: ${trainer.agent.policy.hidden_dim}
+      in_features: ${trainer.teacher_agent.policy.hidden_dim}
       out_features: 1
 
     epsilon: 0.2
@@ -56,5 +62,5 @@ trainer:
     max_grad_norm: 0.5
     gamma: 0.99
     tau: 0.95
-    use_gae: True
+    use_gae: False
     lr: 1e-3

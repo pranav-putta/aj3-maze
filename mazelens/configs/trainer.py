@@ -16,7 +16,7 @@ class BaseTrainerConfig:
     num_environments: int = MISSING
     num_rollout_steps: int = MISSING
     eval_frequency: int = MISSING
-    log_videos: bool = False
+    log_videos: bool = True
 
 
 @dataclass(kw_only=True)

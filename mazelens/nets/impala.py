@@ -17,13 +17,13 @@ class ImpalaPolicyNet(Net):
 
         self.action_head = nn.Linear(hidden_dim, out_dim)
 
-    def forward(self, agent_input: AgentInput):
+    def forward(self, agent_input: AgentInput, generation_mode=False):
         hx = agent_input.prev.hiddens
         x = agent_input.states
         b, t, n, _ = x.shape
-        x = x.to(self.cfg.device)
 
         # embed tokens
+        x = x.long()
         x = rearrange(x, 'b t x y -> b t (x y)')
         x = self.tok_embd(x)
         x = rearrange(x, 'b t (x y) d -> (b t) d x y', x=n, y=n)

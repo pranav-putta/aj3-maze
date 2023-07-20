@@ -18,7 +18,7 @@ class SimpleNet(Net):
                           batch_first=True)
         self.action_head = nn.Linear(hidden_dim, out_dim)
 
-    def forward(self, agent_input: AgentInput):
+    def forward(self, agent_input: AgentInput, generation_mode=False):
         hx = agent_input.prev.hiddens
         x = agent_input.states
         b, t, n, _ = x.shape

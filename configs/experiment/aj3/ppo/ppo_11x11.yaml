@@ -1,0 +1,33 @@
+# @package _global_
+
+defaults:
+  - aj3/ppo/base_ppo
+
+exp_dir: "experiments/ppo_11x11"
+seed: 1
+trainer:
+  num_environments: 32
+  num_rollout_steps: 100
+  eval_frequency: 50
+
+  env:
+    difficulty: 'hard'
+    static_env: True
+    static_episode: True
+    max_steps: 100
+    reward_type: 'sparse'
+    agent_visibility: -1
+    size: [ 11, 11 ]
+  agent:
+    policy:
+      embd_vocab_size: 4
+      embd_dim: 32
+      hidden_dim: 256
+      rnn_layers: 2
+    epsilon: 0.2
+    ppo_epochs: 2
+    num_minibatches: 2
+    value_loss_coef: 0.5
+    entropy_coef: 0.05
+    max_grad_norm: 0.5
+    lr: 1e-3

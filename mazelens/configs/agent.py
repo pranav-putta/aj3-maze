@@ -45,3 +45,4 @@ class BCAgentConfig(BaseAgentConfig):
     _target_: str = 'mazelens.agents.bc.BCAgent'
     policy: BaseNetConfig = MISSING
     lr: float = 1e-4
+    max_grad_norm: float = 0.5

@@ -2,3 +2,10 @@
 
 defaults:
   - aj3/ppo/base_ppo
+
+exp_dir: "experiments/ppo_7x7"
+trainer:
+  agent:
+    lr: 1e-4
+  env:
+    size: [ 7, 7 ]

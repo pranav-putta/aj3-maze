@@ -67,7 +67,7 @@ class PPOAgent(Agent):
             'valids': torch.tensor(infos['valid'])}
 
     def act(self, x: AgentInput) -> AgentActionOutput:
-        features, action_logits, hx = self.policy(x)
+        features, action_logits, hx = self.policy(x, generation_mode=True)
         dist = Categorical(logits=action_logits)
         if self.deterministic:
             actions = dist.mode
@@ -76,7 +76,10 @@ class PPOAgent(Agent):
         actions = actions.squeeze(-1)
         log_probs = dist.log_prob(actions)
         values = self.critic(features).squeeze(-1, -2)
-        return PPOAgentActionOutput(actions=actions, log_probs=log_probs, hiddens=hx, values=values)
+        return PPOAgentActionOutput(actions=actions,
+                                    log_probs=log_probs,
+                                    hiddens=hx,
+                                    values=values)
 
     def evaluate_actions(self, x: AgentInput, actions):
         if len(x.states.shape) == 3:
@@ -91,7 +94,7 @@ class PPOAgent(Agent):
 
     @torch.no_grad()
     def compute_next_value(self, rollouts: RolloutStorage):
-        state = torch.tensor(rollouts.last['states'])[:, None]
+        state = torch.tensor(rollouts.last['states'], device=self.device)[:, None]
         x = Agent.construct_policy_input(states=state)
         x.prev.hiddens = rollouts._storage['hiddens'][-1].transpose(0, 1)
         x.prev.actions = rollouts._storage['actions'][-1]
@@ -146,7 +149,11 @@ class PPOAgent(Agent):
         self.critic.to(device)
 
     def save(self, path):
-        pass
+        torch.save({
+            'policy': self.policy.state_dict(),
+            'critic': self.critic.state_dict(),
+            'optimizer': self.optimizer.state_dict(),
+        }, path)
 
     def load(self, path):
         pass

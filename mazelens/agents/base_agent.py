@@ -75,7 +75,7 @@ class Agent(abc.ABC):
         """
         x.states = torch.from_numpy(np.array(x.states))
         if x.prev.actions is not None:
-            x.prev.actions = torch.from_numpy(np.array(x.prev.actions))
+            x.prev.actions = x.prev.actions.clone()
         if x.prev.rewards is not None:
             x.prev.rewards = torch.from_numpy(np.array(x.prev.rewards))
         return x
@@ -100,21 +100,21 @@ class Agent(abc.ABC):
         pass
 
     @staticmethod
-    def construct_policy_input(states, actions=None, hiddens=None, log_probs=None, rewards=None, shift=False):
-        prev_actions, prev_hiddens, prev_log_probs, prev_rewards = None, None, None, None
+    def construct_policy_input(states, actions=None, hiddens=None, log_probs=None, rewards=None,
+                               shift=False):
         if actions is not None and shift:
-            prev_actions = shift_tensor_sequence(actions, 0, dim=0)
+            actions = shift_tensor_sequence(actions, 0, dim=0)
         if hiddens is not None and shift:
-            prev_hiddens = shift_tensor_sequence(hiddens, 0, dim=0)
+            hiddens = shift_tensor_sequence(hiddens, 0, dim=0)
         if log_probs is not None and shift:
-            prev_log_probs = shift_tensor_sequence(log_probs, 0, dim=0)
+            log_probs = shift_tensor_sequence(log_probs, 0, dim=0)
         if rewards is not None and shift:
-            prev_rewards = shift_tensor_sequence(rewards, 0, dim=0)
+            rewards = shift_tensor_sequence(rewards, 0, dim=0)
 
-        prev_output = AgentActionOutput(actions=prev_actions,
-                                        hiddens=prev_hiddens,
-                                        log_probs=prev_log_probs,
-                                        rewards=prev_rewards)
+        prev_output = AgentActionOutput(actions=actions,
+                                        hiddens=hiddens,
+                                        log_probs=log_probs,
+                                        rewards=rewards)
         agent_input = AgentInput(states=states,
                                  prev=prev_output,
                                  infos=None)

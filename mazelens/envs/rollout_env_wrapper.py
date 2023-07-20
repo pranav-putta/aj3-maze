@@ -19,7 +19,6 @@ class RolloutEnvWrapper(gym.Wrapper):
         """ Standard implementation for rollout """
         states, infos = self.reset()
         prev_agent_output = agent.initial_agent_output()
-        prev_rewards = None
 
         storage = None
 
@@ -29,7 +28,7 @@ class RolloutEnvWrapper(gym.Wrapper):
                                                  infos=infos,
                                                  prev=prev_agent_output))
             agent_output = agent.act(x)
-            next_states, rewards, successes, dones, next_infos = self.step(list(agent_output.actions))
+            next_states, rewards, successes, dones, next_infos = self.step(list(agent_output.actions.cpu()))
 
             output = agent.transform_output(states=states, rewards=rewards, infos=infos,
                                             successes=successes, dones=dones, agent_output=agent_output)

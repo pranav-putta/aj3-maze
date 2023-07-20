@@ -4,15 +4,15 @@ defaults:
   - /experiment/aj3/base
   - /trainer: base_trainer
   - /agent@trainer.agent: base_ppo_agent
-  - /net@trainer.agent.policy: base_simple_net
+  - /net@trainer.agent.policy: base_impala_net
   - /net@trainer.agent.critic: base_linear_head
   - _self_
-
-seed: 1
+ 
+seed: 10
 
 trainer:
-  epochs: 1000
-  num_environments: 4
+  epochs: 100000
+  num_environments: 32
   num_rollout_steps: 50
   eval_frequency: 50
 
@@ -21,7 +21,7 @@ trainer:
     static_env: True
     static_episode: True
     max_steps: 50
-    reward_type: 'sparse'
+    reward_type: 'distance_to_goal'
     agent_visibility: -1
   agent:
     policy:
@@ -31,6 +31,7 @@ trainer:
       hidden_dim: 64
       out_dim: 4
       rnn_layers: 2
+      scale: 1
     critic:
       in_features: ${trainer.agent.policy.hidden_dim}
       out_features: 1
