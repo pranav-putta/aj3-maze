@@ -21,7 +21,12 @@ class RolloutStorage:
     def __init__(self, num_envs, *keys):
         self.num_envs = num_envs
         self._storage = {k: [].copy() for k in keys}
+        self._last = {}
         self.current_step = 0
+
+    @property
+    def last(self):
+        return self._last
 
     def insert(self, **kwargs):
         if len(kwargs.keys()) != len(self._storage.keys()):
@@ -30,16 +35,23 @@ class RolloutStorage:
             self._storage[k].append(v)
         self.current_step += 1
 
+    def insert_last(self, **kwargs):
+        self._last = kwargs
+
     def add_field(self, key, value):
         assert type(value) == list, "field value must be a list"
         assert len(value) == self.current_step, "field value must be same length as storage"
         self._storage[key] = value
 
-    def to_tensordict(self):
+    def to_tensordict(self, batch_first=True):
         """ stacks all tensors in storage into a TensorDict """
-        return TensorDict({k: torch.stack(v) for k, v in self._storage.items()
-                           if all([type(x) == torch.Tensor for x in v])},
-                          batch_size=[self.current_step])
+        batch = TensorDict({k: torch.stack(v) for k, v in self._storage.items()
+                            if all([type(x) == torch.Tensor for x in v])},
+                           batch_size=[self.current_step, self.num_envs])
+
+        if batch_first:
+            batch = batch.transpose(0, 1)
+        return batch
 
     def compute_stats(self, gamma):
         batch = self.to_tensordict()
@@ -58,11 +70,11 @@ class RolloutStorage:
         avg_episode_lengths = 0
 
         for env in range(self.num_envs):
-            done_idxs = torch.where(batch['dones'][:, env])[0]
+            done_idxs = torch.where(batch['dones'][env])[0]
             starts = torch.cat([torch.tensor([0]), done_idxs[:-1] + 1])
             ends = done_idxs
             avg_episode_lengths += (ends - starts).sum().item()
-            avg_returns += returns[starts, env].sum().item()
+            avg_returns += returns[env, starts].sum().item()
             num_episodes += len(starts)
 
         avg_episode_length = avg_episode_lengths / num_episodes
@@ -114,7 +126,7 @@ class RolloutStorage:
             state = self._storage['states'][step][env]
             valid = self._storage['valids'][step][env] if step > 0 else True
             succ = self._storage['successes'][step][env] if step > 0 else False
-            act = self._storage['actions'][step][env]
+            act = self._storage['actions'][step][env].item()
             done = self._storage['dones'][step][env] if step > 0 else False
 
             frames.append(grid_to_frame(state, valid, succ, act))
@@ -123,9 +135,9 @@ class RolloutStorage:
 
     @staticmethod
     def minibatch_generator(batch, num_minibatches=1):
-        T, B = batch['states'].shape[:2]
+        B, T = batch['states'].shape[:2]
         new_batch_size = B // num_minibatches
         for inds in torch.randperm(B).chunk(num_minibatches):
             inds = inds.tolist()
-            yield TensorDict({k: v[:, inds] for k, v in batch.items()},
-                             batch_size=[T, new_batch_size])
+            yield TensorDict({k: v[inds] for k, v in batch.items()},
+                             batch_size=[new_batch_size, T])

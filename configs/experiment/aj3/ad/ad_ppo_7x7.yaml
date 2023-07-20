@@ -1,0 +1,4 @@
+# @package _global_
+
+defaults:
+  - aj3/ad/base_ad

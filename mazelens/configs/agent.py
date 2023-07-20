@@ -18,14 +18,14 @@ class BaseAgentConfig:
 @dataclass(kw_only=True)
 class NetAgentConfig(BaseAgentConfig):
     """ Agent config for neural network policies """
-    policy: BaseNetConfig = MISSING
-    lr: float = 1e-4
+    pass
 
 
 @dataclass(kw_only=True)
 class PPOAgentConfig(NetAgentConfig):
     """ PPO agent specific config """
     _target_: str = "mazelens.agents.ppo.PPOAgent"
+    policy: BaseNetConfig = MISSING
     critic: BaseNetConfig = MISSING
     epsilon: float = 0.2
     ppo_epochs: int = 4
@@ -36,3 +36,12 @@ class PPOAgentConfig(NetAgentConfig):
     gamma: float = 0.99
     tau: float = 0.95
     use_gae: bool = True
+    lr: float = 1e-4
+
+
+@dataclass(kw_only=True)
+class BCAgentConfig(BaseAgentConfig):
+    """ BC agent specific config """
+    _target_: str = 'mazelens.agents.bc.BCAgent'
+    policy: BaseNetConfig = MISSING
+    lr: float = 1e-4

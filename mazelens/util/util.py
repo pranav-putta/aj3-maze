@@ -81,9 +81,9 @@ def frames_to_mp4(frames, filename):
 
 
 def compute_returns(next_value, rewards_t, done_mask_t, use_gae, gamma=None, tau=None, values_t=None):
-    T, E = rewards_t.shape[:2]
-    returns = [torch.zeros_like(rewards_t[0]) for _ in range(T + 1)]
-    next_value = next_value if next_value is not None else torch.zeros_like(rewards_t[0])
+    E, T = rewards_t.shape[:2]
+    returns = [torch.zeros(4, ) for _ in range(T + 1)]
+    next_value = next_value if next_value is not None else torch.zeros_like(rewards_t[:, 0])
     returns[T] = next_value
 
     if use_gae:
@@ -91,17 +91,23 @@ def compute_returns(next_value, rewards_t, done_mask_t, use_gae, gamma=None, tau
             raise ValueError("value_preds must be provided if using GAE")
         gae = 0.
         for step in reversed(range(T)):
-            delta = (rewards_t[step]
+            delta = (rewards_t[:, step]
                      + gamma
-                     * (values_t[step + 1] if step + 1 < T else next_value)
-                     * (~done_mask_t[step])
-                     - values_t[step])
-            gae = delta + gamma * tau * (~done_mask_t[step]) * gae
-            returns[step] = gae + values_t[step]
+                     * (values_t[:, step + 1] if step + 1 < T else next_value)
+                     * (~done_mask_t[:, step])
+                     - values_t[:, step])
+            gae = delta + gamma * tau * (~done_mask_t[:, step]) * gae
+            returns[step] = gae + values_t[:, step]
     else:
         for step in reversed(range(T)):
-            returns[step] = (rewards_t[step]
+            returns[step] = (rewards_t[:, step]
                              + gamma
                              * returns[step + 1]
-                             * (~done_mask_t[step]))
-    return torch.stack(returns[:-1])
+                             * (~done_mask_t[:, step]))
+    return torch.stack(returns[:-1]).transpose(0, 1)
+
+
+def shift_tensor_sequence(x, fill_value, dim):
+    slice_idx = [slice(None)] * dim + [slice(0, 1)]
+    fill = torch.full_like(x[slice_idx], fill_value)
+    return torch.cat([fill, x[:-1]], dim=dim)

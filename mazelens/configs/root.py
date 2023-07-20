@@ -1,14 +1,13 @@
 from dataclasses import dataclass
-from typing import Any
 
 import torch
 from hydra.core.config_store import ConfigStore
-from omegaconf import MISSING, DictConfig
+from omegaconf import MISSING
 
-from mazelens.configs.env import AJ3MazeEnvConfig, DMMaze2DEnvConfig, BaseEnvConfig
-from mazelens.configs.agent import PPOAgentConfig, NetAgentConfig, BaseAgentConfig
+from mazelens.configs.agent import PPOAgentConfig, NetAgentConfig, BCAgentConfig
+from mazelens.configs.env import AJ3MazeEnvConfig, DMMaze2DEnvConfig
 from mazelens.configs.net import SimpleNetConfig, LinearHeadConfig
-from mazelens.configs.trainer import PPOTrainerConfig, BCTrainerConfig, BaseTrainerConfig
+from mazelens.configs.trainer import BaseTrainerConfig, AlgorithmicDistillationTrainerConfig
 
 
 @dataclass(kw_only=True)
@@ -27,11 +26,12 @@ cs.store(group='env', name='base_aj3_maze', node=AJ3MazeEnvConfig)
 cs.store(group='env', name='base_dm_maze2d', node=DMMaze2DEnvConfig)
 
 cs.store(group='agent', name='base_ppo_agent', node=PPOAgentConfig)
+cs.store(group='agent', name='base_bc_agent', node=BCAgentConfig)
 cs.store(group='agent', name='base_net_agent', node=NetAgentConfig)
 
 cs.store(group='trainer', name='base_trainer', node=BaseTrainerConfig)
-cs.store(group='trainer', name='base_ppo_trainer', node=PPOTrainerConfig)
-cs.store(group='trainer', name='base_bc_trainer', node=BCTrainerConfig)
+cs.store(group='trainer', name='base_ad_trainer', node=AlgorithmicDistillationTrainerConfig)
 
 cs.store(group='net', name='base_simple_net', node=SimpleNetConfig)
+cs.store(group='net', name='base_impala_net', node=SimpleNetConfig)
 cs.store(group='net', name='base_linear_head', node=LinearHeadConfig)

@@ -1,7 +1,7 @@
 # @package _global_
 
 defaults:
-  - aj3/base
+  - /experiment/aj3/base
   - /trainer: base_trainer
   - /agent@trainer.agent: base_ppo_agent
   - /net@trainer.agent.policy: base_simple_net
@@ -11,15 +11,24 @@ defaults:
 seed: 1
 
 trainer:
-  num_environments: 2
+  epochs: 1000
+  num_environments: 4
+  num_rollout_steps: 50
+  eval_frequency: 50
+
   env:
     difficulty: 'hard'
+    static_env: True
+    static_episode: True
+    max_steps: 50
+    reward_type: 'sparse'
+    agent_visibility: -1
   agent:
     policy:
       in_dim: ${trainer.env.size[0]}
       embd_vocab_size: 4
-      embd_dim: 32
-      hidden_dim: 32
+      embd_dim: 64
+      hidden_dim: 64
       out_dim: 4
       rnn_layers: 2
     critic:
@@ -34,4 +43,5 @@ trainer:
     max_grad_norm: 0.5
     gamma: 0.99
     tau: 0.95
-    use_gae: True
+    use_gae: False
+    lr: 1e-3

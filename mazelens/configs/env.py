@@ -28,7 +28,7 @@ class AJ3MazeEnvConfig(BaseEnvConfig):
     num_objects: int = 1
     difficulty: str = 'easy'
     reward_type: str = 'sparse'
-    max_steps: int = 100
+    max_steps: int = 50
 
 
 @dataclass

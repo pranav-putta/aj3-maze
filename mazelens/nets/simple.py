@@ -18,8 +18,9 @@ class SimpleNet(Net):
                           batch_first=True)
         self.action_head = nn.Linear(hidden_dim, out_dim)
 
-    def forward(self, x: AgentInput, hx=None):
-        x = x.states
+    def forward(self, agent_input: AgentInput):
+        hx = agent_input.prev.hiddens
+        x = agent_input.states
         b, t, n, _ = x.shape
 
         # embed tokens

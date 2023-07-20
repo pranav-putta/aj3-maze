@@ -5,3 +5,11 @@ defaults:
   - /trainer: base_trainer
   - /agent@trainer.agent: oracle
   - _self_
+
+
+trainer:
+  epochs: 1000
+  num_rollout_steps: 20
+  eval_frequency: 50
+  num_environments: 4
+

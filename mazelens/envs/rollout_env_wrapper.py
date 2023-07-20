@@ -27,8 +27,7 @@ class RolloutEnvWrapper(gym.Wrapper):
             # noinspection PyTypeChecker
             x = agent.transform_input(AgentInput(states=states,
                                                  infos=infos,
-                                                 prev_rewards=prev_rewards,
-                                                 prev_output=prev_agent_output))
+                                                 prev=prev_agent_output))
             agent_output = agent.act(x)
             next_states, rewards, successes, dones, next_infos = self.step(list(agent_output.actions))
 
@@ -42,6 +41,8 @@ class RolloutEnvWrapper(gym.Wrapper):
             states = next_states
             infos = next_infos
             prev_agent_output = agent_output
-            prev_rewards = rewards
+            prev_agent_output.rewards = rewards
+
+        storage.insert_last(states=states, infos=infos)
 
         return storage

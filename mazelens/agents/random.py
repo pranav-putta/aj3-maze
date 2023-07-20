@@ -14,7 +14,7 @@ class RandomAgent(Agent):
         log_probs = torch.tensor([0.0 for _ in range(num_envs)])
         return AgentActionOutput(actions=action, log_probs=log_probs)
 
-    def learn(self, rollouts: RolloutStorage):
+    def train(self, rollouts: RolloutStorage):
         pass
 
     def to(self, device):

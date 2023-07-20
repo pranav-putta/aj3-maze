@@ -5,22 +5,23 @@ import numpy as np
 import torch
 from tensordict import TensorDict
 
+from mazelens.util import shift_tensor_sequence
 from mazelens.util.storage import RolloutStorage
 
 
 @dataclass(kw_only=True)
 class AgentActionOutput:
-    actions: torch.Tensor = None
-    log_probs: torch.Tensor = None
-    hiddens: torch.Tensor = None
+    actions: torch.Tensor | None = None
+    log_probs: torch.Tensor | None = None
+    hiddens: torch.Tensor | None = None
+    rewards: torch.Tensor | None = None
 
 
 @dataclass
 class AgentInput:
     states: torch.Tensor | None
     infos: TensorDict | None
-    prev_rewards: torch.Tensor | None
-    prev_output: AgentActionOutput | None
+    prev: AgentActionOutput | None
 
 
 class Agent(abc.ABC):
@@ -28,7 +29,7 @@ class Agent(abc.ABC):
     Abstract class for all agents.
     """
 
-    def __init__(self, action_space=None, observation_space=None, deterministic=None):
+    def __init__(self, action_space=None, observation_space=None, deterministic=None, **kwargs):
         self.action_space = action_space
         self.observation_space = observation_space
         self.deterministic = deterministic
@@ -41,7 +42,7 @@ class Agent(abc.ABC):
         pass
 
     @abc.abstractmethod
-    def learn(self, rollouts: RolloutStorage):
+    def train(self, rollouts: RolloutStorage):
         """
         Update the agent's internal state given a transition.
         """
@@ -73,10 +74,10 @@ class Agent(abc.ABC):
         convert states, rewards, infos to a batch
         """
         x.states = torch.from_numpy(np.array(x.states))
-        if x.prev_output.actions is not None:
-            x.prev_output.actions = torch.from_numpy(np.array(x.prev_output.actions))
-        if x.prev_rewards is not None:
-            x.prev_rewards = torch.from_numpy(np.array(x.prev_rewards))
+        if x.prev.actions is not None:
+            x.prev.actions = torch.from_numpy(np.array(x.prev.actions))
+        if x.prev.rewards is not None:
+            x.prev.rewards = torch.from_numpy(np.array(x.prev.rewards))
         return x
 
     def transform_output(self, states, rewards, infos, dones, successes, agent_output: AgentActionOutput):
@@ -93,3 +94,28 @@ class Agent(abc.ABC):
 
     def initial_agent_output(self):
         return AgentActionOutput()
+
+    @abc.abstractmethod
+    def parameters(self):
+        pass
+
+    @staticmethod
+    def construct_policy_input(states, actions=None, hiddens=None, log_probs=None, rewards=None, shift=False):
+        prev_actions, prev_hiddens, prev_log_probs, prev_rewards = None, None, None, None
+        if actions is not None and shift:
+            prev_actions = shift_tensor_sequence(actions, 0, dim=0)
+        if hiddens is not None and shift:
+            prev_hiddens = shift_tensor_sequence(hiddens, 0, dim=0)
+        if log_probs is not None and shift:
+            prev_log_probs = shift_tensor_sequence(log_probs, 0, dim=0)
+        if rewards is not None and shift:
+            prev_rewards = shift_tensor_sequence(rewards, 0, dim=0)
+
+        prev_output = AgentActionOutput(actions=prev_actions,
+                                        hiddens=prev_hiddens,
+                                        log_probs=prev_log_probs,
+                                        rewards=prev_rewards)
+        agent_input = AgentInput(states=states,
+                                 prev=prev_output,
+                                 infos=None)
+        return agent_input

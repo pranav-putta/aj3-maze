@@ -20,6 +20,19 @@ class SimpleNetConfig(BaseNetConfig):
 
 
 @dataclass(kw_only=True)
+class ImpalaPolicyNetConfig(BaseNetConfig):
+    _target_: str = "mazelens.nets.impala.ImpalaPolicyNet"
+
+    in_dim: int = MISSING
+    embd_vocab_size: int = MISSING
+    embd_dim: int = MISSING
+    hidden_dim: int = MISSING
+    scale: float = MISSING
+    rnn_layers: int = MISSING
+    out_dim: int = MISSING
+
+
+@dataclass(kw_only=True)
 class LinearHeadConfig(BaseNetConfig):
     _target_: str = "torch.nn.Linear"
     in_features: int = MISSING
