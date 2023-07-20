@@ -1,0 +1,7 @@
+# @package _global_
+
+defaults:
+  - aj3/base
+  - /agent@trainer.agent: random
+  - /trainer: base_trainer
+  - _self_

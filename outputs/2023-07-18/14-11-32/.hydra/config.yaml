@@ -1,4 +1,0 @@
-env:
-  _target_: mazelens.util.construct_maze_env
-  size: 9x9
-num_environments: 1

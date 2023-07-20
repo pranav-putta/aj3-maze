@@ -1,6 +1,0 @@
-defaults:
-  - base_config
-  - trainer: ppo
-  - env: maze_9x9
-  - override env: maze_2d
-  - _self_

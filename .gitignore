@@ -2,3 +2,4 @@ mazelens.egg-info/
 *.mp4
 .idea
 .DS_Store
+outputs

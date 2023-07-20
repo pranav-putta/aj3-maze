@@ -1,26 +1,21 @@
-import os
-
-import gym
-
-from mazelens.configs.root import MazeEnvConfig
-
-os.environ['MUJOCO_GL'] = 'glfw'
-
 import hydra
+from hydra.utils import instantiate
 from omegaconf import OmegaConf
 
-from mazelens.configs import Config
+from mazelens.envs import *
 from mazelens.util.util import *
-from functools import partial as f
-from hydra.utils import get_class, instantiate
+from mazelens.trainers import *
+import warnings
+
+warnings.filterwarnings("ignore", category=DeprecationWarning)
 
 
 @hydra.main(version_base=None, config_path="configs", config_name="config")
 def run(cfg: Config) -> None:
     print_yaml(OmegaConf.to_yaml(cfg))
 
-    env = instantiate(cfg.env)
-
+    trainer = instantiate(cfg.trainer, cfg.device, cfg.seed, cfg.exp_dir)
+    trainer.train()
 
 
 if __name__ == "__main__":

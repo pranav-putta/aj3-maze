@@ -1,0 +1,37 @@
+# @package _global_
+
+defaults:
+  - aj3/base
+  - /trainer: base_trainer
+  - /agent@trainer.agent: base_ppo_agent
+  - /net@trainer.agent.policy: base_simple_net
+  - /net@trainer.agent.critic: base_linear_head
+  - _self_
+
+seed: 1
+
+trainer:
+  num_environments: 2
+  env:
+    difficulty: 'hard'
+  agent:
+    policy:
+      in_dim: ${trainer.env.size[0]}
+      embd_vocab_size: 4
+      embd_dim: 32
+      hidden_dim: 32
+      out_dim: 4
+      rnn_layers: 2
+    critic:
+      in_features: ${trainer.agent.policy.hidden_dim}
+      out_features: 1
+
+    epsilon: 0.2
+    ppo_epochs: 4
+    num_minibatches: 2
+    value_loss_coef: 0.5
+    entropy_coef: 0.01
+    max_grad_norm: 0.5
+    gamma: 0.99
+    tau: 0.95
+    use_gae: True

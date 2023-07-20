@@ -1,8 +1,0 @@
-env:
-  _target_: mazelens.envs.MazeEnv
-  image_only_obs: true
-  top_camera: true
-  camera_resolution: 64
-  discrete_actions: true
-  size: 9x9
-num_environments: 1

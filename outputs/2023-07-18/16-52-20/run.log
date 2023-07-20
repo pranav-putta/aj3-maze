@@ -1,4 +1,0 @@
-[2023-07-18 16:52:20,675][absl][INFO] - MUJOCO_GL=glfw, attempting to import specified OpenGL backend.
-[2023-07-18 16:52:21,160][absl][INFO] - MuJoCo library version is: 2.3.6
-[2023-07-18 16:52:22,754][absl][WARNING] - Cannot set velocity on Entity with no free joint.
-[2023-07-18 16:52:26,543][absl][WARNING] - Cannot set velocity on Entity with no free joint.

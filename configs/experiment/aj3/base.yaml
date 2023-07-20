@@ -1,0 +1,4 @@
+# @package _global_
+defaults:
+  - /base_config
+  - /env@trainer.env: base_aj3_maze

@@ -1,7 +1,0 @@
-_target_: mazelens.envs.MazeEnv
-env_id: 'Maze-v1'
-
-# maze configs
-image_only_obs: False
-top_camera: False
-global_observables: True

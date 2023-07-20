@@ -1,5 +1,0 @@
-env:
-  image_only_obs: false
-  top_camera: false
-  _target_: memory_mazes.tasks.memory_maze_9x9
-num_environments: 1

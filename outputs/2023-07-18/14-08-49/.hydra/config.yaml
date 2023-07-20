@@ -1,3 +1,0 @@
-env:
-  _target_: memory_maze.tasks.memory_maze_9x9
-num_environments: 1
