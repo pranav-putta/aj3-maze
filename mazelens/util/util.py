@@ -2,18 +2,13 @@ import heapq
 import pickle
 from functools import lru_cache
 
-import gym
+import cv2
 import numpy as np
 import torch
-from hydra.utils import get_class
 from rich.console import Console
 from rich.syntax import Syntax
 
-from mazelens.configs.env import BaseEnvConfig
 from mazelens.util.colors import object_colors
-from functools import partial as f
-
-import cv2
 
 
 def print_yaml(yaml):

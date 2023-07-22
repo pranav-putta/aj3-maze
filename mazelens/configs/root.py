@@ -1,5 +1,5 @@
 import os.path
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from typing import Optional
 
 import torch

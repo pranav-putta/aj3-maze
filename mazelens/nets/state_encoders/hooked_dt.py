@@ -1,14 +1,12 @@
 import torch
 from einops import rearrange
-from torch import nn
 from torch.nn.utils.rnn import unpad_sequence
-from transformer_lens import HookedTransformerKeyValueCache
 
 from mazelens.nets.base_net import StatefulNet
 from mazelens.nets.modules.focal_loss import FocalLoss
-from mazelens.nets.modules.gpt import GPT
 from mazelens.nets.modules.hooked_gpt import HookedGPT
-from mazelens.nets.modules.hooked_gpt_config import HookedGPTConfig
+from mazelens.nets.modules.hooked_gpt_components import HookedTransformerKeyValueCache, \
+    HookedTransformerKeyValueCacheEntry
 
 
 class HookedTransformerStateEncoder(StatefulNet):
@@ -34,27 +32,43 @@ class HookedTransformerStateEncoder(StatefulNet):
             return False
         elif self.mode == 'rebatch':
             return True
+        else:
+            raise Exception(f'invalid mode {self.mode}')
 
     def single_forward(self, x, hx, done_mask):
         B, _, D = x.shape
-        empty_pk = self.initialize_hidden(B)
-        L = len(hx)
 
-        # to deal with varying lengths
-        hx = [[[empty_pk[l][k][b][None, :] if done_mask[b] else hx[l][k][b]
-                for k in range(2)] for l in range(L)]
-              for b in range(B)]
+        if type(hx) == HookedTransformerKeyValueCache:
+            hx = hx.separate_batch(B)
 
-        # run transformer
         xs, hxs = [], []
         for b in range(B):
-            x_b, hx_b = self.gpt(tokens=[x[b][None, :]], past_kv=hx[b], return_past_kv=True)
+            x_b = self.gpt(x[b:b + 1], past_kv_cache=hx[b])
             xs.append(x_b)
-            hxs.append(hx_b)
 
         x = torch.cat(xs, dim=0)
-        hx = [[[hxs[b][l][k].detach() for b in range(B)] for k in range(2)] for l in range(L)]
+        hx = [hx_i.detach_tensors() for hx_i in hx]
         return x, hx
+
+    def test_multistep_past_kv_cache(self, x, cache):
+        tmp_xs = []
+        tmp_caches = []
+        for i in range(2):
+            tmp_xs.append(x.clone())
+            tmp_caches.append(
+                HookedTransformerKeyValueCache(entries=[HookedTransformerKeyValueCacheEntry(e.past_keys.clone(),
+                                                                                            e.past_values.clone())
+                                                        for e in cache.entries]))
+
+        # try one large step
+        out1 = self.gpt(tmp_xs[0], past_kv_cache=tmp_caches[0])
+
+        # try in steps
+        out2 = []
+        for i in range(tmp_xs[1].shape[1]):
+            out2.append(self.gpt(tmp_xs[1][:, i:i + 1], past_kv_cache=tmp_caches[1]))
+        out2 = torch.cat(out2, dim=1)
+        assert torch.allclose(out1, out2, rtol=1e-3)
 
     def seq_forward(self, x: torch.Tensor, hx, done_mask):
         B, T, *_ = x.shape
@@ -68,15 +82,14 @@ class HookedTransformerStateEncoder(StatefulNet):
             x, lengths = self.construct_padded_sequence(x, done_mask)
 
         # we're going to assume we start at a reset state, so past_kv is None
-        x, hx = self.gpt(x, past_kv_cache=hx)
-        hx = self.stack_hiddens_into_tensor(hx)
+        x = self.gpt(x, past_kv_cache=None)
 
         if self.should_rebatch_inputs:
             x = unpad_sequence(x, lengths, batch_first=True)
             x = torch.cat(x, dim=0)
             x = rearrange(x, '(b t) ... -> b t ...', b=B)
 
-        return x, hx
+        return x, None
 
     def stack_hiddens_into_tensor(self, hiddens):
         return torch.stack([torch.stack(kv) for kv in hiddens])

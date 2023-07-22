@@ -87,7 +87,7 @@ class StatefulNet(Net, abc.ABC):
             packed_hx = packed_hx.contiguous()
             return padded_x, packed_hx, lengths
         else:
-            return padded_x, None, lengths
+            return padded_x, lengths
 
     def deconstruct_packed_sequence(self, packed_x, packed_hx, batch_size):
         """

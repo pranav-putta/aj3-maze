@@ -1,5 +1,5 @@
 from dataclasses import dataclass, MISSING
-from typing import Union, Any
+from typing import Any
 
 
 @dataclass(kw_only=True)

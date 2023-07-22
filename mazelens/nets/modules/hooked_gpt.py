@@ -20,10 +20,10 @@ from mazelens.nets.modules.hooked_gpt_components import (
     RMSNorm,
     RMSNormPre,
     TransformerBlock,
+    HookedTransformerKeyValueCache
 )
 from transformer_lens.hook_points import HookedRootModule, HookPoint
 # Note - activation cache is used with run_with_cache, past_key_value_caching is used for generation.
-from transformer_lens.past_key_value_caching import HookedTransformerKeyValueCache
 from transformer_lens.utilities import devices
 from typeguard import typeguard_ignore
 from typing_extensions import Literal
@@ -270,9 +270,9 @@ class HookedGPT(HookedRootModule):
             assert num_heads_in_cache == self.cfg.n_heads
             assert d_head_in_cache == self.cfg.d_head
             # If we want to generate from the empty string, we'd pass in an empty cache, so we need to handle that case
-            assert (
-                    cache_ctx_length == 0 or ctx_length == 1
-            ), "Pass in one token at a time after loading cache"
+            # assert (
+            #         cache_ctx_length == 0 or ctx_length == 1
+            # ), "Pass in one token at a time after loading cache"
             pos_offset = cache_ctx_length
         if self.cfg.use_hook_tokens:
             tokens = self.hook_tokens(embed)

@@ -4,3 +4,4 @@ mazelens.egg-info/
 .DS_Store
 outputs
 wandb
+__pycache__/
