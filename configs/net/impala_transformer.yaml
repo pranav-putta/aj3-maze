@@ -1,6 +1,6 @@
 defaults:
   - base_impala_net
-  - /net@rnn: base_transformer_state_encoder
+  - /net@rnn: base_hooked_transformer_state_encoder
 
 
 embd_vocab_size: 4
@@ -11,7 +11,11 @@ hidden_dim: 32
 
 scale: 1
 rnn:
-  hidden_dim: ${..hidden_dim}
-  layers: 2
-  attn_heads: 8
+  n_layers: 2
+  d_model: ${..hidden_dim}
+  d_head: 64
+  n_heads: 8
+  n_ctx: 1024
+  d_mlp: ${..hidden_dim}
+
   mode: "algorithmic-distillation"

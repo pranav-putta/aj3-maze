@@ -9,7 +9,7 @@ from omegaconf import MISSING, OmegaConf
 from mazelens.configs.agent import PPOAgentConfig, NetAgentConfig, BCAgentConfig, BaseAgentConfig
 from mazelens.configs.env import AJ3MazeEnvConfig, DMMaze2DEnvConfig
 from mazelens.configs.net import LinearHeadConfig, ImpalaPolicyNetConfig, RNNStateEncoder, \
-    TransformerStateEncoder
+    TransformerStateEncoder, HookedTransformerStateConfig
 from mazelens.configs.trainer import BaseTrainerConfig, AlgorithmicDistillationTrainerConfig
 
 
@@ -64,6 +64,7 @@ cs.store(group='net', name='base_impala_net', node=ImpalaPolicyNetConfig)
 cs.store(group='net', name='base_linear_head', node=LinearHeadConfig)
 cs.store(group='net', name='base_rnn_state_encoder', node=RNNStateEncoder)
 cs.store(group='net', name='base_transformer_state_encoder', node=TransformerStateEncoder)
+cs.store(group='net', name='base_hooked_transformer_state_encoder', node=HookedTransformerStateConfig)
 
 cs.store(group='logger', name='base_wb_logger', node=WBLoggerConfig)
 cs.store(group='logger', name='base_text_logger', node=TextLoggerConfig)

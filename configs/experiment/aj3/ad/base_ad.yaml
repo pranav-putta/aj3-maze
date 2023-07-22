@@ -35,9 +35,6 @@ trainer:
       condition_on: 'sar'
       embd_dim: 64
       hidden_dim: 256
-      rnn:
-        layers: 2
-        attn_heads: 4
 
   teacher_agent:
     epsilon: 0.2

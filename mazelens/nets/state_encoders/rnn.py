@@ -35,7 +35,7 @@ class RNNStateEncoder(StatefulNet):
 
     def seq_forward(self, x, hx, done_mask):
         B, *_ = x.shape
-        padded_x, packed_hx, lengths = self.construct_padded_sequence(x, hx, done_mask)
+        padded_x, packed_hx, lengths = self.construct_padded_sequence(x, done_mask, hx=hx)
         packed_x = pack_padded_sequence(padded_x, lengths, batch_first=True, enforce_sorted=False)
         packed_hx = rearrange(packed_hx, 'b l ... -> l b ...')
 

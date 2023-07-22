@@ -48,6 +48,7 @@ class BCAgent(Agent):
         return actions, hx
 
     def update(self, rollouts: RolloutStorage):
+        self.policy.train()
         batch = rollouts.to_tensordict()
         batch = batch.to(self.device)
 

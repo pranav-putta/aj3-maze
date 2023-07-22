@@ -57,7 +57,7 @@ class StatefulNet(Net, abc.ABC):
         else:
             return self.seq_forward(x, hx, done_mask)
 
-    def construct_padded_sequence(self, x, hx, done_mask):
+    def construct_padded_sequence(self, x, done_mask, hx=None):
         """
         Builds a packed sequence from the input.
 
@@ -68,7 +68,6 @@ class StatefulNet(Net, abc.ABC):
         """
         B, T = x.shape[:2]
         x = rearrange(x, 'b t ... -> (b t) ...')
-        hx = rearrange(hx, 'b t ... -> (b t) ...')
         done_mask = rearrange(done_mask, 'b t -> (b t)')
 
         episode_start_ids = torch.where(done_mask)[0]
@@ -81,13 +80,14 @@ class StatefulNet(Net, abc.ABC):
         # lengths, perm_idx = torch.tensor(lengths, device='cpu').sort(0, descending=True)
         # padded_x = padded_x[perm_idx]
 
-        packed_hx = hx[episode_start_ids]
-        # packed_hx = packed_hx[perm_idx]
-        packed_hx = packed_hx.contiguous()
-
-        # assert torch.all(packed_hx == 0), 'currently hx is only supported for resets at every rollout'
-
-        return padded_x, packed_hx, lengths
+        if hx is not None:
+            hx = rearrange(hx, 'b t ... -> (b t) ...')
+            packed_hx = hx[episode_start_ids]
+            # packed_hx = packed_hx[perm_idx]
+            packed_hx = packed_hx.contiguous()
+            return padded_x, packed_hx, lengths
+        else:
+            return padded_x, None, lengths
 
     def deconstruct_packed_sequence(self, packed_x, packed_hx, batch_size):
         """

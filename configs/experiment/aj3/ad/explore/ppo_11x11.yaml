@@ -34,5 +34,6 @@ trainer:
     lr: 2.5e-4
     policy:
       condition_on: 's'
-#      rnn:
+      rnn:
+        n_layers: 2
 #        mode: "continuous"
