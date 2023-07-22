@@ -1,27 +1,13 @@
 import abc
-from dataclasses import dataclass
+from typing import Iterable, Any, Tuple
 
 import numpy as np
 import torch
-from tensordict import TensorDict
+from einops import rearrange
+from torch.distributions import Categorical
 
-from mazelens.util import shift_tensor_sequence
 from mazelens.util.storage import RolloutStorage
-
-
-@dataclass(kw_only=True)
-class AgentActionOutput:
-    actions: torch.Tensor | None = None
-    log_probs: torch.Tensor | None = None
-    hiddens: torch.Tensor | None = None
-    rewards: torch.Tensor | None = None
-
-
-@dataclass
-class AgentInput:
-    states: torch.Tensor | None
-    infos: TensorDict | None
-    prev: AgentActionOutput | None
+from mazelens.util.structs import ExperienceDict
 
 
 class Agent(abc.ABC):
@@ -29,20 +15,34 @@ class Agent(abc.ABC):
     Abstract class for all agents.
     """
 
-    def __init__(self, action_space=None, observation_space=None, deterministic=None, **kwargs):
+    def __init__(self, action_space=None, observation_space=None, deterministic=None, device=None, **kwargs):
         self.action_space = action_space
         self.observation_space = observation_space
         self.deterministic = deterministic
+        self.device = device
+
+    def sample_action(self, action_logits):
+        dist = Categorical(logits=action_logits)
+        if self.deterministic:
+            actions = dist.mode
+        else:
+            actions = dist.sample()
+        actions = actions.squeeze(-1)
+        log_probs = dist.log_prob(actions)
+        return actions, log_probs
 
     @abc.abstractmethod
-    def act(self, x: AgentInput) -> AgentActionOutput:
+    def act(self, x: ExperienceDict) -> Tuple[Iterable[int], Any]:
         """
-        Return an action given an observation.
+        Act on a batch of states.
+
+        @param x:
+        @return: (actions, hidden)
         """
         pass
 
     @abc.abstractmethod
-    def train(self, rollouts: RolloutStorage):
+    def update(self, rollouts: RolloutStorage):
         """
         Update the agent's internal state given a transition.
         """
@@ -69,53 +69,32 @@ class Agent(abc.ABC):
         """
         pass
 
-    def transform_input(self, x: AgentInput):
+    def before_step(self, x: ExperienceDict):
         """
         convert states, rewards, infos to a batch
         """
-        x.states = torch.from_numpy(np.array(x.states))
-        if x.prev.actions is not None:
-            x.prev.actions = x.prev.actions.clone()
-        if x.prev.rewards is not None:
-            x.prev.rewards = torch.from_numpy(np.array(x.prev.rewards))
+        x.states = torch.from_numpy(np.array(x.states)).to(self.device)
+        is_seq = len(x.states.shape) == 4
+        if not is_seq:
+            x.states = rearrange(x.states, 'b ... -> b 1 ...')
+
+        x.prev_dones = torch.from_numpy(np.array(x.prev_dones)).to(self.device)
+
         return x
 
-    def transform_output(self, states, rewards, infos, dones, successes, agent_output: AgentActionOutput):
+    def after_step(self, x: ExperienceDict):
         """
         convert output to a batch
         """
-        return {'states': torch.from_numpy(np.array(states)),
-                'rewards': torch.from_numpy(rewards),
-                'valids': torch.tensor(infos['valid']),
-                'actions': agent_output.actions,
-                'dones': torch.from_numpy(dones),
-                'successes': torch.from_numpy(successes),
-                'log_probs': agent_output.log_probs}
+        x.rewards = torch.tensor(x.rewards, dtype=torch.float, device=self.device)
+        x.states = x.states.squeeze(1)
+        x.truncated = torch.tensor(x.truncated, dtype=torch.bool, device=self.device)
+        x.success = torch.tensor(x.success, dtype=torch.bool, device=self.device)
+        return x
 
-    def initial_agent_output(self):
-        return AgentActionOutput()
+    def initialize_hidden(self, batch_size):
+        return None
 
     @abc.abstractmethod
     def parameters(self):
         pass
-
-    @staticmethod
-    def construct_policy_input(states, actions=None, hiddens=None, log_probs=None, rewards=None,
-                               shift=False):
-        if actions is not None and shift:
-            actions = shift_tensor_sequence(actions, 0, dim=0)
-        if hiddens is not None and shift:
-            hiddens = shift_tensor_sequence(hiddens, 0, dim=0)
-        if log_probs is not None and shift:
-            log_probs = shift_tensor_sequence(log_probs, 0, dim=0)
-        if rewards is not None and shift:
-            rewards = shift_tensor_sequence(rewards, 0, dim=0)
-
-        prev_output = AgentActionOutput(actions=actions,
-                                        hiddens=hiddens,
-                                        log_probs=log_probs,
-                                        rewards=rewards)
-        agent_input = AgentInput(states=states,
-                                 prev=prev_output,
-                                 infos=None)
-        return agent_input

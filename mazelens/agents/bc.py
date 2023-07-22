@@ -1,31 +1,23 @@
 from dataclasses import dataclass
+from typing import Any, Iterable, Tuple
 
 import torch
 from einops import rearrange
-from tensordict import TensorDict
 from torch import nn
 from torch.distributions import Categorical
 
 from mazelens.agents.base_agent import Agent
-from mazelens.agents.base_agent import AgentActionOutput, AgentInput
 from mazelens.nets.base_net import Net
 from mazelens.nets.modules.focal_loss import FocalLoss
-from mazelens.util import compute_returns
 from mazelens.util.storage import RolloutStorage
-import torch.nn.functional as F
-
-
-@dataclass(kw_only=True)
-class PPOAgentActionOutput(AgentActionOutput):
-    values: torch.Tensor = None
+from mazelens.util.structs import ExperienceDict
 
 
 class BCAgent(Agent):
     policy: Net
 
-    def __init__(self, policy=None, action_space=None, observation_space=None, deterministic=False,
-                 device=None, lr=None, max_grad_norm=None):
-        super().__init__(action_space, observation_space, deterministic)
+    def __init__(self, lr, max_grad_norm, device, policy, **kwargs):
+        super().__init__(**kwargs)
         self.policy = policy
 
         self.policy.to(device)
@@ -39,51 +31,35 @@ class BCAgent(Agent):
     def parameters(self):
         return list(self.policy.parameters())
 
-    def act(self, x: AgentInput) -> AgentActionOutput:
-        features, action_logits, hx = self.policy(x, generation_mode=True)
-        dist = Categorical(logits=action_logits)
-        if self.deterministic:
-            actions = dist.mode
-        else:
-            actions = dist.sample()
-        actions = actions.squeeze(-1)
-        log_probs = dist.log_prob(actions)
-        return AgentActionOutput(actions=actions, log_probs=log_probs, hiddens=hx)
-
-    def transform_input(self, x: AgentInput):
-        x = super().transform_input(x)
-        x.states = x.states.to(self.device)
-
-        if x.prev.actions is not None:
-            x.prev.actions = x.prev.actions.to(self.device)
-        if x.prev.rewards is not None:
-            x.prev.rewards = x.prev.rewards.to(self.device)
-
-        is_seq = len(x.states.shape) == 4
-        if not is_seq:
-            x.states = rearrange(x.states, 'b ... -> b 1 ...')
-
+    def before_step(self, x: ExperienceDict):
+        x = super().before_step(x)
         return x
 
-    def transform_output(self, states, rewards, infos, dones, successes, agent_output: AgentActionOutput):
-        return {
-            'states': torch.from_numpy(states).long(),
-            'rewards': torch.tensor(rewards).float(),
-            'dones': torch.tensor(dones).bool(),
-            'successes': torch.tensor(successes).bool(),
-            'hiddens': agent_output.hiddens,
-            'actions': agent_output.actions,
-            'log_probs': agent_output.log_probs,
-            'valids': torch.tensor(infos['valid'])
-        }
+    def after_step(self, x: ExperienceDict):
+        x = super().after_step(x)
+        return x
 
-    def train(self, rollouts: RolloutStorage):
+    def initialize_hidden(self, batch_size):
+        if hasattr(self.policy, 'rnn'):
+            return self.policy.rnn.initialize_hidden(batch_size).to(self.device)
+
+    def act(self, x: ExperienceDict) -> Tuple[Iterable[int], Any]:
+        features, action_logits, hx = self.policy(x)
+        actions, log_probs = self.sample_action(action_logits)
+        return actions, hx
+
+    def update(self, rollouts: RolloutStorage):
         batch = rollouts.to_tensordict()
-        batch = batch.apply(lambda x: x.to(self.device))
-        agent_input = self.policy.transform_batch_to_input(batch)
+        batch = batch.to(self.device)
 
+        # construct experience dict
+        agent_input = ExperienceDict(prev_hiddens=batch['prev_hiddens'],
+                                     prev_dones=batch['prev_dones'],
+                                     states=batch['states'],
+                                     actions=batch['actions'],
+                                     rewards=batch['rewards'])
         features, action_logits, hx = self.policy(agent_input)
-        actions = agent_input.prev.actions
+        actions = agent_input.prev_state.actions
 
         # we don't have to shift actions because actions describes the action taken at the next step already
         X = rearrange(action_logits, 'b t d -> (b t) d')
@@ -106,6 +82,3 @@ class BCAgent(Agent):
 
     def load(self, path):
         pass
-
-    def initial_agent_output(self):
-        return AgentActionOutput()

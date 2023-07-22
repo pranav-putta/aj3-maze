@@ -1,0 +1,16 @@
+defaults:
+  - base_impala_net
+  - /net@rnn: base_rnn_state_encoder
+
+
+embd_vocab_size: 4
+in_dim: ${trainer.env.obs_dim}
+out_dim: 4
+embd_dim: 8
+hidden_dim: 32
+
+scale: 1
+rnn:
+  rnn_type: gru
+  hidden_dim: ${..hidden_dim}
+  layers: 2

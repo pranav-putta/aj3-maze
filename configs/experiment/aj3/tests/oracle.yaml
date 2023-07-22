@@ -12,4 +12,3 @@ trainer:
   num_rollout_steps: 20
   eval_frequency: 50
   num_environments: 4
-

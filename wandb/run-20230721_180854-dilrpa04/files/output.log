@@ -1,0 +1,52 @@
+[34m[1mwandb[39m[22m: [33mWARNING[39m Ignored wandb.init() arg project when running a sweep.
+  0%|▏                                                                                                                                              | 1/1000 [00:01<19:39,  1.18s/it]
+Starting train with PPOAgent in AJ3MazeEnv on cpu device
+Agent parameters:  901141
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  5%|██████▉                                                                                                                                       | 49/1000 [00:56<18:25,  1.16s/it]
+Error executing job with overrides: ['+experiment=aj3/ppo/ppo_7x7']
+Traceback (most recent call last):
+  File "/Users/pranavputta/GitHub/maze-lens/run.py", line 18, in run
+    stats = trainer.train()
+  File "/Users/pranavputta/GitHub/maze-lens/mazelens/trainers/base_trainer.py", line 73, in train
+    self.logger.log(f'Stats for epoch {epoch + 1}: {stats}')
+  File "/Users/pranavputta/GitHub/maze-lens/mazelens/util/logger.py", line 30, in log
+    wandb.log(data)
+  File "/Users/pranavputta/mambaforge/envs/mazelens/lib/python3.10/site-packages/wandb/sdk/wandb_run.py", line 389, in wrapper
+    return func(self, *args, **kwargs)
+  File "/Users/pranavputta/mambaforge/envs/mazelens/lib/python3.10/site-packages/wandb/sdk/wandb_run.py", line 340, in wrapper_fn
+    return func(self, *args, **kwargs)
+  File "/Users/pranavputta/mambaforge/envs/mazelens/lib/python3.10/site-packages/wandb/sdk/wandb_run.py", line 330, in wrapper
+    return func(self, *args, **kwargs)
+  File "/Users/pranavputta/mambaforge/envs/mazelens/lib/python3.10/site-packages/wandb/sdk/wandb_run.py", line 1745, in log
+    self._log(data=data, step=step, commit=commit)
+  File "/Users/pranavputta/mambaforge/envs/mazelens/lib/python3.10/site-packages/wandb/sdk/wandb_run.py", line 1521, in _log
+    raise ValueError("wandb.log must be passed a dictionary")
+ValueError: wandb.log must be passed a dictionary
+Set the environment variable HYDRA_FULL_ERROR=1 for a complete stack trace.

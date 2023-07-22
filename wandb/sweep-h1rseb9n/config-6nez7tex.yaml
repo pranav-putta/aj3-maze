@@ -1,0 +1,12 @@
+wandb_version: 1
+
+experiment:
+  value: aj3/ppo/ppo_7x7
+trainer.agent.entropy_coef:
+  value: 0.06717615739871255
+trainer.agent.lr:
+  value: 0.00018683069472245008
+trainer.agent.max_grad_norm:
+  value: 0.6219169842057842
+trainer.agent.value_loss_coef:
+  value: 0.6722865037222819

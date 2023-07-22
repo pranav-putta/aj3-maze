@@ -1,0 +1,36 @@
+{
+    "os": "macOS-12.5-arm64-arm-64bit",
+    "python": "3.10.12",
+    "heartbeatAt": "2023-07-21T23:08:54.699092",
+    "startedAt": "2023-07-21T23:08:54.245608",
+    "docker": null,
+    "cuda": null,
+    "args": [
+        "+experiment=aj3/ppo/ppo_7x7"
+    ],
+    "state": "running",
+    "program": "/Users/pranavputta/GitHub/maze-lens/run.py",
+    "codePath": "run.py",
+    "git": {
+        "remote": "https://github.com/pranav-putta/maze-lens.git",
+        "commit": "c31727310762a4188e5cd2d2b79bb4b2e934fb44"
+    },
+    "email": "pranav.putta22@gmail.com",
+    "root": "/Users/pranavputta/GitHub/maze-lens",
+    "host": "pranavs-air-3.lan",
+    "username": "pranavputta",
+    "executable": "/Users/pranavputta/mambaforge/envs/mazelens/bin/python",
+    "cpu_count": 8,
+    "cpu_count_logical": 8,
+    "disk": {
+        "total": 460.4317207336426,
+        "used": 21.801326751708984
+    },
+    "gpuapple": {
+        "type": "arm",
+        "vendor": "Apple"
+    },
+    "memory": {
+        "total": 24.0
+    }
+}

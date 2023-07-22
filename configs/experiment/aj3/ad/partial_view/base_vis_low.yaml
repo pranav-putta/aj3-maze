@@ -1,0 +1,10 @@
+# @package _global_
+
+defaults:
+  - /experiment/aj3/ad/base_ad
+  - _self_
+
+
+trainer:
+  env:
+    visible_radius: -1

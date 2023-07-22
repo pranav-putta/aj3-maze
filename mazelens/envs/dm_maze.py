@@ -4,7 +4,7 @@ from gym import Env
 
 os.environ['MUJOCO_GL'] = 'glfw'
 
-from memory_maze import tasks, _make_gym_env
+# from memory_maze import tasks, _make_gym_env
 
 
 class DMMazeEnv(Env):

@@ -3,31 +3,27 @@
 defaults:
   - aj3/ppo/base_ppo
 
-exp_dir: "experiments/ppo_9x9"
-seed: 1
 trainer:
-  num_environments: 32
-  num_rollout_steps: 100
-  eval_frequency: 50
+  num_rollout_steps: 50
+  epochs: 10000
+  num_environments: 8
 
   env:
-    difficulty: 'hard'
-    static_env: True
+    size: [ 7, 7 ]
     static_episode: False
-    max_steps: 100
-    reward_type: 'sparse'
-    agent_visibility: -1
-    size: [ 9, 9 ]
+#    visible_radius: -1
+    difficulty: 'hard'
+
   agent:
     policy:
-      embd_vocab_size: 4
       embd_dim: 32
       hidden_dim: 256
-      rnn_layers: 2
+      rnn:
+        layers: 2
     epsilon: 0.2
     ppo_epochs: 2
     num_minibatches: 2
     value_loss_coef: 0.5
-    entropy_coef: 0.05
-    max_grad_norm: 0.5
-    lr: 2e-4
+    entropy_coef: 0.01
+    max_grad_norm: 0.75
+    lr: 1e-4

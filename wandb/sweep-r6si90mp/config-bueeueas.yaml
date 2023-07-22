@@ -1,0 +1,10 @@
+wandb_version: 1
+
+trainer.agent.entropy_coef:
+  value: 0.10723019208425856
+trainer.agent.lr:
+  value: 0.0007304806448767964
+trainer.agent.max_grad_norm:
+  value: 0.8970346860047373
+trainer.agent.value_loss_coef:
+  value: 0.7497016839145358

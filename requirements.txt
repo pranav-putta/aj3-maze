@@ -1,0 +1,13 @@
+gym==0.26.1
+wandb==0.15.5
+omegaconf==2.3.0
+numpy==1.25.0
+torch==2.0.1
+Cython==3.0.0
+einops==0.6.1
+opencv-python==4.8.0.74
+rich==13.4.2
+Pillow==9.4.0
+tensordict@ git+https://github.com/pytorch-labs/tensordict
+tqdm==4.65.0
+setuptools==67.8.0

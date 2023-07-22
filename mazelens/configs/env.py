@@ -2,20 +2,21 @@ from dataclasses import dataclass, MISSING
 from typing import Tuple
 
 
-@dataclass
+@dataclass(kw_only=True)
 class BaseEnvConfig:
     """ Defines the base configuration for maze environments."""
     _target_: str = MISSING
     env_id: str = MISSING
     max_steps: int = MISSING
+    obs_dim: int = MISSING
 
 
-@dataclass
+@dataclass(kw_only=True)
 class MazeEnvConfig(BaseEnvConfig):
     size: Tuple[int, int] = MISSING
 
 
-@dataclass
+@dataclass(kw_only=True)
 class AJ3MazeEnvConfig(BaseEnvConfig):
     """ Extends the base maze environment configuration with AJ3Maze specific parameters."""
     _target_: str = "mazelens.envs.AJ3MazeEnv"
@@ -24,9 +25,9 @@ class AJ3MazeEnvConfig(BaseEnvConfig):
     size: Tuple[int, int] = (9, 9)
     static_env: bool = True
     static_episode: bool = False
-    agent_visibility: int = -1
+    visible_radius: int = -1
     num_objects: int = 1
-    difficulty: str = 'easy'
+    difficulty: str | None = 'easy'
     reward_type: str = 'sparse'
     max_steps: int = 50
 

@@ -1,8 +1,10 @@
+from typing import Tuple, Iterable, Any
+
 import torch
 
-from mazelens.agents.base_agent import AgentActionOutput, AgentInput
 from mazelens.agents.base_agent import Agent
 from mazelens.util.storage import RolloutStorage
+from mazelens.util.structs import ExperienceDict
 
 
 class OracleAgent(Agent):
@@ -11,13 +13,12 @@ class OracleAgent(Agent):
     def parameters(self):
         pass
 
-    def act(self, x: AgentInput) -> AgentActionOutput:
+    def act(self, x: ExperienceDict) -> Tuple[Iterable[int], Any]:
         num_envs = len(x.states)
         actions = torch.tensor([a for a in x.infos['best_action']])
-        log_probs = torch.tensor([0.0 for _ in range(num_envs)])
-        return AgentActionOutput(actions=actions, log_probs=log_probs)
+        return actions, None
 
-    def train(self, rollouts: RolloutStorage):
+    def update(self, rollouts: RolloutStorage):
         pass
 
     def to(self, device):

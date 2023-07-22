@@ -1,0 +1,14 @@
+2023-07-21 18:06:32,657 INFO    MainThread:47869 [wandb_setup.py:_flush():76] Current SDK version is 0.15.5
+2023-07-21 18:06:32,657 INFO    MainThread:47869 [wandb_setup.py:_flush():76] Configure stats pid to 47869
+2023-07-21 18:06:32,657 INFO    MainThread:47869 [wandb_setup.py:_flush():76] Loading settings from /Users/pranavputta/.config/wandb/settings
+2023-07-21 18:06:32,657 INFO    MainThread:47869 [wandb_setup.py:_flush():76] Loading settings from /Users/pranavputta/GitHub/maze-lens/wandb/settings
+2023-07-21 18:06:32,657 INFO    MainThread:47869 [wandb_setup.py:_flush():76] Loading settings from environment variables: {'entity': 'cvmlp-embodiment-transfer', 'project': 'mazelens', 'sweep_id': 'h1rseb9n', 'root_dir': '/Users/pranavputta/GitHub/maze-lens', 'run_id': '0x1b718f', 'sweep_param_path': '/Users/pranavputta/GitHub/maze-lens/wandb/sweep-h1rseb9n/config-0x1b718f.yaml'}
+2023-07-21 18:06:32,657 INFO    MainThread:47869 [wandb_setup.py:_flush():76] Applying setup settings: {'_disable_service': False}
+2023-07-21 18:06:32,657 INFO    MainThread:47869 [wandb_setup.py:_flush():76] Inferring run settings from compute environment: {'program_relpath': 'run.py', 'program': '/Users/pranavputta/GitHub/maze-lens/run.py'}
+2023-07-21 18:06:32,657 INFO    MainThread:47869 [wandb_init.py:_log_setup():507] Logging user logs to /Users/pranavputta/GitHub/maze-lens/wandb/run-20230721_180632-0x1b718f/logs/debug.log
+2023-07-21 18:06:32,657 INFO    MainThread:47869 [wandb_init.py:_log_setup():508] Logging internal logs to /Users/pranavputta/GitHub/maze-lens/wandb/run-20230721_180632-0x1b718f/logs/debug-internal.log
+2023-07-21 18:06:32,658 INFO    MainThread:47869 [wandb_init.py:init():547] calling init triggers
+2023-07-21 18:06:32,658 INFO    MainThread:47869 [wandb_init.py:init():554] wandb.init called with sweep_config: {'experiment': 'aj3/ppo/ppo_7x7', 'trainer.agent.entropy_coef': 0.17389925936787817, 'trainer.agent.lr': 0.0008511076409536034, 'trainer.agent.max_grad_norm': 0.7357311217248483, 'trainer.agent.value_loss_coef': 0.23684541288067731}
+config: {'_metadata': ContainerMetadata(ref_type=typing.Any, object_type=<class 'dict'>, optional=True, key=None, flags={'allow_objects': True}, flags_root=False, resolver_cache=defaultdict(<class 'dict'>, {}), key_type=typing.Any, element_type=typing.Any), '_parent': None, '_flags_cache': None, '_content': {'trainer': <mazelens.trainers.base_trainer.Trainer object at 0x16bdf80d0>, 'logger': <mazelens.util.logger.WandBLogger object at 0x16bdf8160>, 'device': 'cpu', 'exp_dir': 'experiments', 'exp_name': 'aj3/ppo/ppo_7x7', 'seed': 1}}
+2023-07-21 18:06:32,658 INFO    MainThread:47869 [wandb_init.py:init():591] wandb.init() called when a run is still active
+2023-07-21 18:07:35,710 WARNING MsgRouterThr:47869 [router.py:message_loop():77] message_loop has been closed

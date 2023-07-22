@@ -99,8 +99,8 @@ class DecisionTransformerNet(Net):
             input_order = ('a', 'r', 's')
         else:
             input_order = ('s', 'a', 'r')
-        features = self.compute_features(x.states, x.prev.actions,
-                                         x.prev.rewards, hx=x.prev.hiddens,
+        features = self.compute_features(x.states, x.prev_state.actions,
+                                         x.prev_state.rewards, hx=x.prev_state.hiddens,
                                          input_order=input_order)
 
         action_logits = self.action_head(features.logits)

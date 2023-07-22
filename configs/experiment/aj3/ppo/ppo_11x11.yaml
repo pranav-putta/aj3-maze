@@ -3,7 +3,6 @@
 defaults:
   - aj3/ppo/base_ppo
 
-exp_dir: "experiments/ppo_11x11"
 seed: 1
 trainer:
   num_environments: 32

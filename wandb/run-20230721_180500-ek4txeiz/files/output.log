@@ -1,0 +1,3 @@
+Starting train with PPOAgent in AJ3MazeEnv on cpu device
+Agent parameters:  901141
+Saving results to experiments/aj3/ppo/ppo_7x7

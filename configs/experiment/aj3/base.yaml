@@ -2,3 +2,14 @@
 defaults:
   - /base_config
   - /env@trainer.env: base_aj3_maze
+  - /logger: base_wb_logger
+
+exp_name: ${hydra:runtime.choices.experiment}
+logger:
+  project: 'mazelens'
+  group: ${slice_path:${exp_name},0:-1:}
+  name: ${slice_path:${exp_name},-1::}
+
+trainer:
+  env:
+    obs_dim: ${obs_dim:${trainer.env.visible_radius},${trainer.env.size.0}}

@@ -1,11 +1,27 @@
 # @package _global_
 
 defaults:
-  - aj3/ppo/base_ppo
+  - /experiment/aj3/ppo/base_ppo
 
-exp_dir: "experiments/ppo_7x7"
 trainer:
-  agent:
-    lr: 1e-4
+  num_rollout_steps: 50
+
   env:
     size: [ 7, 7 ]
+    static_episode: False
+    difficulty: 'hard'
+
+  agent:
+    policy:
+      embd_dim: 32
+      hidden_dim: 256
+      rnn:
+        layers: 2
+    epsilon: 0.2
+    ppo_epochs: 2
+    num_minibatches: 2
+
+    val_loss_coef: 0.5
+    entropy_coef: 0.07
+    max_grad_norm: 0.5
+    lr: 5e-4

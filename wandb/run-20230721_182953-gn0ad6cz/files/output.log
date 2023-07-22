@@ -1,0 +1,10 @@
+[34m[1mwandb[39m[22m: [33mWARNING[39m Ignored wandb.init() arg project when running a sweep.
+  0%|▏                                                                                                                                              | 1/1000 [00:01<19:27,  1.17s/it]
+Starting train with PPOAgent in AJ3MazeEnv on cpu device
+Agent parameters:  901141
+
+
+
+
+
+  1%|█▍                                                                                                                                            | 10/1000 [00:11<19:05,  1.16s/it]

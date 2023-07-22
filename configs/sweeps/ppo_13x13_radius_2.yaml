@@ -1,0 +1,35 @@
+program: run.py
+project: mazelens
+name: ppo_sweep_13x13_radius_2
+
+metric:
+  name: success_rate
+  goal: maximize
+
+method: bayes
+parameters:
+  trainer.agent.lr:
+    distribution: log_uniform
+    min: -9.21
+    max: -6.97
+  trainer.agent.val_loss_coef:
+    distribution: uniform
+    min: 0.2
+    max: 1.0
+  trainer.agent.entropy_coef:
+    distribution: uniform
+    min: 0
+    max: 0.2
+  trainer.agent.max_grad_norm:
+    distribution: uniform
+    min: 0.2
+    max: 1.0
+
+
+
+command:
+  - ${env}
+  - python
+  - run.py
+  - "+experiment=aj3/ppo/low_vis/13x13_radius_2"
+  - "logger.name=null"

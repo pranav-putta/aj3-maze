@@ -11,6 +11,7 @@ from mazelens.agents import Agent
 from mazelens.envs.rollout_env_wrapper import RolloutEnvWrapper
 from mazelens.trainers import Trainer
 from mazelens.util import compute_returns
+import wandb
 
 
 class AlgorithmicDistillationTrainer(Trainer):
@@ -19,11 +20,8 @@ class AlgorithmicDistillationTrainer(Trainer):
     agent: Agent
     teacher_agent: Agent
 
-    def __init__(self, device, seed, exp_dir, agent=None, env=None, epochs=None,
-                 num_rollout_steps=None, eval_frequency=None,
-                 num_environments=None, log_videos=None, teacher_agent=None):
-        super().__init__(device, seed, exp_dir, agent, env, epochs, num_rollout_steps,
-                         eval_frequency, num_environments, log_videos)
+    def __init__(self, teacher_agent=None, **kwargs):
+        super().__init__(**kwargs)
         self.teacher_agent_f = teacher_agent
 
     def init_train(self):
@@ -47,23 +45,29 @@ class AlgorithmicDistillationTrainer(Trainer):
                 rollouts = self.env.rollout(agent=self.teacher_agent, num_steps=self.num_rollout_steps)
 
             # train the teacher agent
-            self.teacher_agent.train(rollouts)
-            # train the student agent
-            loss = self.agent.train(rollouts)
+            teacher_loss = self.teacher_agent.update(rollouts)
+            loss = self.agent.update(rollouts)
+
+            self.logger.log({"student_loss": loss,
+                             "teacher_loss": teacher_loss})
 
             if (epoch + 1) % self.eval_frequency == 0:
                 teacher_stats = rollouts.compute_stats(0.99)
                 student_rollout = self.env.rollout(agent=self.agent, num_steps=self.num_rollout_steps)
                 student_stats = student_rollout.compute_stats(0.99)
 
-                print(f'Teacher Stats for epoch {epoch + 1}: {teacher_stats}')
-                print(f'Student Stats for epoch {epoch + 1}: {student_stats}')
-                print(f'Student Loss for epoch {epoch + 1}: {loss}')
-
                 if self.log_videos:
-                    rollouts.save_episode_to_mp4(os.path.join(self.exp_dir, 'videos', f'epoch_{epoch + 1}_teacher.mp4'))
+                    rollouts.save_episode_to_mp4(
+                        os.path.join(self.exp_dir, 'videos', f'epoch_{epoch + 1}_teacher.mp4'))
                     student_rollout.save_episode_to_mp4(
                         os.path.join(self.exp_dir, 'videos', f'epoch_{epoch + 1}_student.mp4'))
 
-                self.agent.save(os.path.join(self.exp_dir, 'checkpoints', f'epoch_{epoch + 1}_student.pt'))
-                self.teacher_agent.save(os.path.join(self.exp_dir, 'checkpoints', f'epoch_{epoch + 1}_teacher.pt'))
+                self.agent.save(
+                    os.path.join(self.exp_dir, 'checkpoints', f'epoch_{epoch + 1}_student.pt'))
+                self.teacher_agent.save(
+                    os.path.join(self.exp_dir, 'checkpoints', f'epoch_{epoch + 1}_teacher.pt'))
+
+                self.logger.log({"teacher_success_rate": teacher_stats.success_rate,
+                                 "teacher_mean_returns": teacher_stats.avg_reward,
+                                 "student_success_rate": student_stats.success_rate,
+                                 "student_mean_returns": student_stats.avg_reward})

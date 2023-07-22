@@ -5,32 +5,33 @@ defaults:
   - /trainer: base_ad_trainer
     # teacher
   - /agent@trainer.teacher_agent: base_ppo_agent
-  - /net@trainer.teacher_agent.policy: base_impala_net
+  - /net@trainer.teacher_agent.policy: impala_gru
   - /net@trainer.teacher_agent.critic: base_linear_head
     # student
   - /agent@trainer.agent: base_bc_agent
-  - /net@trainer.agent.policy: base_decision_transformer_net
+  - /net@trainer.agent.policy: impala_transformer
   - _self_
 
 seed: 1
 
 trainer:
   epochs: 1000
-  num_environments: 32
+  num_environments: 16
   num_rollout_steps: 50
   eval_frequency: 50
 
   env:
-    difficulty: 'hard'
+    difficulty: null
     static_env: True
     static_episode: True
     max_steps: 50
-    reward_type: 'sparse'
-    agent_visibility: -1
+    reward_type: 'distance-to_goal'
+    visible_radius: -1
+    size: [ 7, 7 ]
 
   agent:
     policy:
-      in_dim: ${trainer.env.size[0]}
+      in_dim: ${trainer.env.obs_dim}
       embd_vocab_size: 4
       embd_dim: 64
       hidden_dim: 256
@@ -43,7 +44,7 @@ trainer:
 
   teacher_agent:
     policy:
-      in_dim: ${trainer.env.size[0]}
+      in_dim: ${trainer.env.obs_dim}
       embd_vocab_size: 4
       embd_dim: 64
       hidden_dim: 256

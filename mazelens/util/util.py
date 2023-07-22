@@ -82,7 +82,7 @@ def frames_to_mp4(frames, filename):
 
 def compute_returns(next_value, rewards_t, done_mask_t, use_gae, gamma=None, tau=None, values_t=None):
     E, T = rewards_t.shape[:2]
-    returns = [torch.zeros(4, ) for _ in range(T + 1)]
+    returns = [torch.zeros(E, ) for _ in range(T + 1)]
     next_value = next_value if next_value is not None else torch.zeros_like(rewards_t[:, 0])
     returns[T] = next_value
 
@@ -91,19 +91,21 @@ def compute_returns(next_value, rewards_t, done_mask_t, use_gae, gamma=None, tau
             raise ValueError("value_preds must be provided if using GAE")
         gae = 0.
         for step in reversed(range(T)):
+            not_done = ~done_mask_t[:, step + 1] if step + 1 < T else True
             delta = (rewards_t[:, step]
                      + gamma
                      * (values_t[:, step + 1] if step + 1 < T else next_value)
-                     * (~done_mask_t[:, step])
+                     * not_done
                      - values_t[:, step])
-            gae = delta + gamma * tau * (~done_mask_t[:, step]) * gae
+            gae = delta + gamma * tau * not_done * gae
             returns[step] = gae + values_t[:, step]
     else:
         for step in reversed(range(T)):
+            not_done = ~done_mask_t[:, step + 1] if step + 1 < T else True
             returns[step] = (rewards_t[:, step]
                              + gamma
                              * returns[step + 1]
-                             * (~done_mask_t[:, step]))
+                             * not_done)
     return torch.stack(returns[:-1]).transpose(0, 1)
 
 

@@ -1,0 +1,16 @@
+# @package _global_
+
+defaults:
+  - aj3/ad/base_ad
+  - _self_
+
+trainer:
+  epochs: 10000
+  eval_frequency: 50
+  teacher_agent:
+    lr: 1e-4
+  agent:
+    lr: 1e-3
+  env:
+    static_episode: False
+    size: [ 9, 9 ]

@@ -11,7 +11,6 @@ import abc
 import numpy as np
 from numpy.random import shuffle
 
-
 class MazeGenAlgo:
     __metaclass__ = abc.ABCMeta
 

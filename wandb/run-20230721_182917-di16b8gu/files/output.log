@@ -1,0 +1,13 @@
+Starting train with PPOAgent in AJ3MazeEnv on cpu device
+Agent parameters:  901141
+Saving results to experiments/aj3/ppo/ppo_7x7
+[34m[1mwandb[39m[22m: [33mWARNING[39m Ignored wandb.init() arg project when running a sweep.
+  0%|                                                                                                                                                       | 0/1000 [00:01<?, ?it/s]
+Error executing job with overrides: ['+experiment=aj3/ppo/ppo_7x7']
+Traceback (most recent call last):
+  File "/Users/pranavputta/GitHub/maze-lens/run.py", line 18, in run
+    stats = trainer.train()
+  File "/Users/pranavputta/GitHub/maze-lens/mazelens/trainers/base_trainer.py", line 72, in train
+    self.logger.log({
+TypeError: 'RolloutStats' object is not a mapping
+Set the environment variable HYDRA_FULL_ERROR=1 for a complete stack trace.

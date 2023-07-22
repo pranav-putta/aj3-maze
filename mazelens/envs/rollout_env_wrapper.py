@@ -1,15 +1,12 @@
 from dataclasses import asdict
-from typing import Tuple, Any
+from dataclasses import fields
 
 import gym
-from gym import Env
-import abc
-
 from gym.vector import AsyncVectorEnv
 
-from mazelens.agents import Agent, AgentInput
-from mazelens.util import compute_returns
+from mazelens.agents import Agent
 from mazelens.util.storage import RolloutStorage
+from mazelens.util.structs import ExperienceDict
 
 
 class RolloutEnvWrapper(gym.Wrapper):
@@ -18,30 +15,48 @@ class RolloutEnvWrapper(gym.Wrapper):
     def rollout(self, agent: Agent, num_steps) -> RolloutStorage:
         """ Standard implementation for rollout """
         states, infos = self.reset()
-        prev_agent_output = agent.initial_agent_output()
-
-        storage = None
-
+        exp = ExperienceDict(prev_dones=[True] * self.env.num_envs,
+                             prev_hiddens=agent.initialize_hidden(self.env.num_envs),
+                             states=states,
+                             infos=infos,
+                             actions=None,
+                             rewards=None,
+                             success=None,
+                             truncated=None)
+        storage = RolloutStorage(self.env.num_envs, *[f.name for f in fields(exp)])
+        # Experience Tuples: (prev_done, prev_hidden, state, info, action, reward, success, truncated)
         for step in range(num_steps):
+            # before step transformation
+            exp = agent.before_step(exp)
+
+            # compute action and step environment
+            actions, next_hidden = agent.act(exp)
+            next_states, rwds, success, truncated, next_infos = self.step(actions.cpu())
+
+            if step == num_steps - 1:
+                truncated = [True] * self.env.num_envs
+            next_dones = [d or t for d, t in zip(success, truncated)]
+
+            # update experience tuple, and apply after step transformation
+            exp.actions = actions
+            exp.rewards = rwds
+            exp.truncated = truncated
+            exp.success = success
+            exp = agent.after_step(exp)
+            storage.insert(**asdict(exp))
+
+            # update experience tuple
             # noinspection PyTypeChecker
-            x = agent.transform_input(AgentInput(states=states,
-                                                 infos=infos,
-                                                 prev=prev_agent_output))
-            agent_output = agent.act(x)
-            next_states, rewards, successes, dones, next_infos = self.step(list(agent_output.actions.cpu()))
+            exp = ExperienceDict(prev_dones=next_dones,
+                                 prev_hiddens=next_hidden,
+                                 states=next_states,
+                                 infos=next_infos,
+                                 actions=None,
+                                 rewards=None,
+                                 truncated=None,
+                                 success=None)
 
-            output = agent.transform_output(states=states, rewards=rewards, infos=infos,
-                                            successes=successes, dones=dones, agent_output=agent_output)
-            if storage is None:
-                storage = RolloutStorage(self.env.num_envs, *output.keys())
-
-            storage.insert(**output)
-
-            states = next_states
-            infos = next_infos
-            prev_agent_output = agent_output
-            prev_agent_output.rewards = rewards
-
-        storage.insert_last(states=states, infos=infos)
+        # insert the last incomplete experience tuple separately
+        storage.last_exp = exp
 
         return storage

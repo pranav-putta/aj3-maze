@@ -30,7 +30,7 @@ class PPOAgentConfig(NetAgentConfig):
     epsilon: float = 0.2
     ppo_epochs: int = 4
     num_minibatches: int = 2
-    value_loss_coef: float = 0.5
+    val_loss_coef: float = 0.5
     entropy_coef: float = 0.01
     max_grad_norm: float = 0.5
     gamma: float = 0.99

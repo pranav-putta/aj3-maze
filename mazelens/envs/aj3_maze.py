@@ -25,14 +25,33 @@ class Reward(abc.ABC):
         pass
 
 
+class RewardWrapper:
+    def __init__(self, reward_fn):
+        self.reward_fn = reward_fn
+
+    def __call__(self, agent_position, valid, success):
+        return self.reward_fn(agent_position, valid, success)
+
+
+class ClippedRewardWrapper(RewardWrapper):
+    def __init__(self, reward_fn, min_reward=-1, max_reward=1):
+        super().__init__(reward_fn)
+        self.min_reward = min_reward
+        self.max_reward = max_reward
+
+    def __call__(self, agent_position, valid, success):
+        reward = super().__call__(agent_position, valid, success)
+        return np.clip(reward, self.min_reward, self.max_reward)
+
+
 class SparseReward(Reward):
     def __call__(self, agent_position, valid, success):
         if success:
             return +1
         elif not valid:
-            return -0.75
+            return -1
         else:
-            return -0.5
+            return -0.1
 
 
 class DistanceToGoalReward(Reward):
@@ -51,10 +70,10 @@ class DistanceToGoalReward(Reward):
             cur_dist = self.distance_map[agent_position[0]][agent_position[1]]
             if cur_dist < self.last_dist:
                 self.last_dist = cur_dist
-                return -0.2
+                return 0.5
             else:
                 self.last_dist = cur_dist
-                return -0.5
+                return -1
 
 
 @dataclass
@@ -76,10 +95,10 @@ class Maze:
     grid: np.ndarray
     _original_maze: np.ndarray
 
-    def __init__(self, static_env, seed, agent_visibility, num_objects, size):
+    def __init__(self, static_env, seed, visible_radius, num_objects, size):
         self.static_env = static_env
         self.seed = seed
-        self.agent_visibility = agent_visibility
+        self.visible_radius = visible_radius
         self.num_objects = num_objects
         self.size = list(size)
         self.grid = None
@@ -98,8 +117,8 @@ class Maze:
             self.grid = grid.generate()
             # if agent visibility is -1, then the agent can see the entire maze
             # pad the maze with 1s to avoid needing to check for out of bounds
-            if self.agent_visibility != -1:
-                self.grid = np.pad(self.grid, self.agent_visibility, constant_values=1)
+            if self.visible_radius != -1:
+                self.grid = np.pad(self.grid, self.visible_radius, constant_values=1)
 
             self._original_maze = self.grid.copy()
         else:
@@ -136,7 +155,7 @@ class Maze:
 
     @property
     def agent_view(self):
-        radius = self.agent_visibility
+        radius = self.visible_radius
         if radius == -1:
             return self.grid
         else:
@@ -147,7 +166,7 @@ class Maze:
 
 class AJ3MazeEnv(Env):
     def __init__(self, static_env=None, static_episode=None, difficulty=None,
-                 reward_type=None, seed=None, agent_visibility=None,
+                 reward_type=None, seed=None, visible_radius=None,
                  num_objects=None, size=None, max_steps=None, **kwargs):
         super().__init__()
         self.static_env = static_env
@@ -155,17 +174,23 @@ class AJ3MazeEnv(Env):
         self.difficulty = difficulty
         self.reward_type = reward_type
         self.seed = seed
-        self.agent_visibility = agent_visibility
+        self.visible_radius = visible_radius
         self.num_objects = num_objects
         self.size = size
 
-        self.maze = Maze(self.static_env, self.seed, self.agent_visibility, self.num_objects, self.size)
+        self.maze = Maze(self.static_env, self.seed, self.visible_radius, self.num_objects, self.size)
         self.motions = [(0, 1), (0, -1), (1, 0), (-1, 0)]
         self.max_steps = max_steps
         self.steps = 0
 
-        self.observation_space = Box(low=0, high=len(self.maze.objects), shape=self.maze.size, dtype=np.uint8)
+        self.observation_space = Box(low=0, high=len(self.maze.objects), shape=self.agent_view_shape, dtype=np.uint8)
         self.action_space = Discrete(len(self.motions))
+
+    @property
+    def agent_view_shape(self):
+        if self.visible_radius == -1:
+            return self.maze.grid.shape
+        return self.visible_radius * 2 + 1, self.visible_radius * 2 + 1
 
     @property
     def agent(self):
@@ -174,6 +199,13 @@ class AJ3MazeEnv(Env):
     @property
     def goal(self):
         return self.maze.objects[goal_object + 3]
+
+    @property
+    def full_grid(self):
+        r = self.visible_radius
+        if r == -1:
+            return self.maze.grid
+        return self.maze.grid[r:-r, r:-r]
 
     @property
     def best_action(self):
@@ -197,13 +229,15 @@ class AJ3MazeEnv(Env):
             self.maze.update_grid(current_position, new_position)
         reward = self.reward_fn(new_position, valid, success)
 
-        done = success
+        truncated = False
         self.steps += 1
         if self.steps >= self.max_steps:
-            done = True
+            truncated = True
         obs = self.maze.agent_view.astype(np.uint8)
-        return obs, reward, success, done, {'valid': valid,
-                                            'best_action': self.best_action}
+
+        return obs, reward, success, truncated, {'valid': valid,
+                                                 'best_action': self.best_action,
+                                                 'full_view': self.full_grid.copy()}
 
     def reset(self, **kwargs):
         self.steps = 0
@@ -236,6 +270,9 @@ class AJ3MazeEnv(Env):
         elif self.difficulty == 'hard':
             min_dist = int(0.6 * self.max_distance)
             max_dist = int(1.0 * self.max_distance)
+        elif self.difficulty is None:
+            min_dist = 1
+            max_dist = int(1.0 * self.max_distance)
         else:
             raise ValueError('Invalid difficulty')
 
@@ -257,15 +294,18 @@ class AJ3MazeEnv(Env):
             raise ValueError('Invalid reward type')
 
         obs = self.maze.agent_view.astype(np.uint8)
-        return obs, {'valid': True, 'success': False, 'best_action': self.best_action}
+        return obs, {'valid': True,
+                     'best_action': self.best_action,
+                     'full_view': self.full_grid.copy()}
 
     def _is_valid(self, position):
-        nonnegative = position[0] >= 0 and position[1] >= 0
-        within_edge = position[0] < self.maze.size[0] and position[1] < self.maze.size[1]
+        r = self.visible_radius
+        within_horizontal = r < position[0] < self.maze.grid.shape[0] - r - 1
+        within_vertical = r < position[1] < self.maze.grid.shape[1] - r - 1
         for obj in self.maze.objects:
             if obj.impassable and tuple(position) in obj.positions:
                 return False
-        return nonnegative and within_edge
+        return within_horizontal and within_vertical
 
     def _is_goal(self, position):
         out = False
@@ -276,5 +316,5 @@ class AJ3MazeEnv(Env):
         return out
 
     def get_image(self):
-        r = self.agent_visibility
+        r = self.visible_radius
         return maze_to_rgb(self.maze.grid[r:-r, r:-r])

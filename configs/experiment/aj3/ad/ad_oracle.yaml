@@ -24,7 +24,7 @@ trainer:
     static_episode: True
     max_steps: 50
     reward_type: 'sparse'
-    agent_visibility: -1
+    visible_radius: -1
 
   agent:
     lr: 1e-3
