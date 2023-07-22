@@ -3,3 +3,4 @@ mazelens.egg-info/
 .idea
 .DS_Store
 outputs
+wandb

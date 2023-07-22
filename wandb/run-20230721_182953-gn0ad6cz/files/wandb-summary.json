@@ -1,1 +1,0 @@
-{"epoch": 10, "success_rate": 0.125, "num_episodes": 16, "avg_episode_length": 46.8125, "avg_reward": -25.199579179286957, "actor_loss": 0.06665987893939018, "critic_loss": 0.5351428985595703, "_timestamp": 1689982206.5430741, "_runtime": 13.316652059555054, "_step": 9, "_wandb": {"runtime": 13}}
