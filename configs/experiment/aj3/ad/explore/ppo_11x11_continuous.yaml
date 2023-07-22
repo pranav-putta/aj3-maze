@@ -39,4 +39,4 @@ trainer:
       condition_on: 'sar'
       rnn:
         n_layers: 2
-        mode: "rebatch"
+        mode: "continuous"
