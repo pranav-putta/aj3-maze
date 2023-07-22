@@ -7,33 +7,34 @@ defaults:
   - /agent@trainer.teacher_agent: oracle
     # student
   - /agent@trainer.agent: base_bc_agent
-  - /net@trainer.agent.policy: base_decision_transformer_net
+  - /net@trainer.agent.policy: impala_transformer
   - _self_
 
 seed: 1
 
 trainer:
   epochs: 1000
-  num_environments: 4
+  num_environments: 16
   num_rollout_steps: 50
   eval_frequency: 50
 
   env:
     difficulty: 'hard'
     static_env: True
-    static_episode: True
+    static_episode: False
     max_steps: 50
-    reward_type: 'sparse'
+    reward_type: 'distance_to_goal'
     visible_radius: -1
+    size: [ 13, 13 ]
 
   agent:
     lr: 1e-3
     policy:
-      in_dim: ${trainer.env.size[0]}
-      embd_vocab_size: 4
+      condition_on: 's'
       embd_dim: 64
       hidden_dim: 256
-      out_dim: 4
-      layers: 2
-      attn_heads: 4
-      scale: 1
+      rnn:
+        layers: 2
+        attn_heads: 4
+        mode: 'rebatch'
+

@@ -10,6 +10,7 @@ embd_dim: 8
 hidden_dim: 32
 
 scale: 1
+condition_on: "s"
 rnn:
   rnn_type: gru
   hidden_dim: ${..hidden_dim}

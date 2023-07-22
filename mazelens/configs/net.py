@@ -1,5 +1,5 @@
 from dataclasses import dataclass, MISSING
-from typing import Union
+from typing import Union, Any
 
 
 @dataclass(kw_only=True)
@@ -23,6 +23,7 @@ class TransformerStateEncoder(BaseNetConfig):
     hidden_dim: int = MISSING
     layers: int = MISSING
     attn_heads: int = MISSING
+    mode: str = MISSING
 
 
 @dataclass(kw_only=True)
@@ -36,7 +37,8 @@ class ImpalaPolicyNetConfig(BaseNetConfig):
     scale: float = MISSING
     out_dim: int = MISSING
 
-    rnn: Union[RNNStateEncoder, TransformerStateEncoder] = MISSING
+    rnn: Any = MISSING
+    condition_on: str = MISSING
 
 
 @dataclass(kw_only=True)

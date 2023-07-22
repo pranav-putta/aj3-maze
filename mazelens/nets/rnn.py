@@ -1,5 +1,7 @@
 import torch
+from einops import rearrange
 from torch.nn import GRU
+from torch.nn.utils.rnn import pack_padded_sequence
 
 from mazelens.nets.base_net import StatefulNet
 
@@ -20,6 +22,7 @@ class RNNStateEncoder(StatefulNet):
 
     def single_forward(self, x, hx, mask):
         not_done_mask = ~mask
+        hx = hx.transpose(0, 1)
 
         # mask out previous hidden states accordingly
         # this is to prevent the rnn from using the hidden states of the previous episode
@@ -27,15 +30,19 @@ class RNNStateEncoder(StatefulNet):
 
         # run rnn
         x, hx = self.rnn(x, hx)
+        hx = hx.transpose(0, 1)
         return x, hx
 
     def seq_forward(self, x, hx, done_mask):
         B, *_ = x.shape
-        packed_x, packed_hx = self.construct_packed_sequence(x, hx, done_mask)
+        padded_x, packed_hx, lengths = self.construct_padded_sequence(x, hx, done_mask)
+        packed_x = pack_padded_sequence(padded_x, lengths, batch_first=True, enforce_sorted=False)
+        packed_hx = rearrange(packed_hx, 'b l ... -> l b ...')
+
         packed_out, packed_hx = self.rnn(packed_x, packed_hx)
+
         x, hx = self.deconstruct_packed_sequence(packed_out, packed_hx, B)
         return x, hx
-        # return self.rnn(x)
 
     def initialize_hidden(self, batch_size):
-        return torch.zeros(self.layers, batch_size, self.hidden_dim)
+        return torch.zeros(self.layers, batch_size, self.hidden_dim).transpose(0, 1)

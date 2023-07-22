@@ -41,7 +41,7 @@ class BCAgent(Agent):
 
     def initialize_hidden(self, batch_size):
         if hasattr(self.policy, 'rnn'):
-            return self.policy.rnn.initialize_hidden(batch_size).to(self.device)
+            return self.policy.rnn.initialize_hidden(batch_size)
 
     def act(self, x: ExperienceDict) -> Tuple[Iterable[int], Any]:
         features, action_logits, hx = self.policy(x)
@@ -53,17 +53,16 @@ class BCAgent(Agent):
         batch = batch.to(self.device)
 
         # construct experience dict
-        agent_input = ExperienceDict(prev_hiddens=batch['prev_hiddens'],
-                                     prev_dones=batch['prev_dones'],
+        agent_input = ExperienceDict(prev_dones=batch['prev_dones'],
+                                     prev_hiddens=self.initialize_hidden(batch.shape[0]),
                                      states=batch['states'],
                                      actions=batch['actions'],
                                      rewards=batch['rewards'])
         features, action_logits, hx = self.policy(agent_input)
-        actions = agent_input.prev_state.actions
 
         # we don't have to shift actions because actions describes the action taken at the next step already
         X = rearrange(action_logits, 'b t d -> (b t) d')
-        Y = rearrange(actions, 'b t -> (b t)')
+        Y = rearrange(batch['actions'], 'b t -> (b t)')
 
         loss = self.criterion(X, Y)
 

@@ -8,7 +8,7 @@ trainer:
   env:
     static_episode: False
     size: [ 9, 9 ]
-    difficulty: null
+    difficulty: 'hard'
     visible_radius: 2
 
   epochs: 10000
@@ -22,14 +22,14 @@ trainer:
     max_grad_norm: 0.7
     lr: 2.5e-4
     policy:
-      embd_dim: 64
+      embd_dim: 32
       hidden_dim: 256
       rnn:
         layers: 2
 
   agent:
-    lr: 2.5e-4
+    lr: 1e-3
     policy:
-      condition_on: 's'
-#      rnn:
-#        mode: "continuous"
+      condition_on: 'sar'
+      rnn:
+        mode: "continuous"

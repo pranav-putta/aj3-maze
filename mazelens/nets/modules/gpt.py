@@ -301,7 +301,7 @@ class GPT(nn.Module):
             if return_past_kv:
                 new_key_values.append((k, v))
         x = self.ln_f(x)
-        x = x.view(B, T, N, D).permute(2, 0, 1, 3)
+        # x = x.view(B, T, N, D).permute(2, 0, 1, 3)
         return GPTOutput(logits=x, keys_values=new_key_values)
 
     def forward(self, **kwargs):

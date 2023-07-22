@@ -4,7 +4,7 @@ from torch.distributions import Categorical
 from einops import rearrange
 from torch import nn
 
-from mazelens.agents import AgentInput, Agent
+from mazelens.agents import Agent
 from mazelens.nets.base_net import Net
 from mazelens.nets.modules.focal_loss import FocalLoss
 from mazelens.nets.modules.gpt import GPT

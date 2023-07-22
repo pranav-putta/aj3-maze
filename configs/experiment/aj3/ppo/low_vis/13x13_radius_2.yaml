@@ -4,15 +4,16 @@ defaults:
   - /experiment/aj3/ppo/base_ppo
 
 trainer:
-  num_rollout_steps: 125
-  epochs: 10000
+  num_rollout_steps: 200
+  epochs: 3000
 
   env:
     size: [ 13, 13 ]
+    static_env: False
     static_episode: False
-    visible_radius: 2
+    visible_radius: 3
     reward_type: 'distance_to_goal'
-    max_steps: 125
+    max_steps: 200
 
   agent:
     policy:

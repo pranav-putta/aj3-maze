@@ -25,43 +25,40 @@ trainer:
     static_env: True
     static_episode: True
     max_steps: 50
-    reward_type: 'distance-to_goal'
+    reward_type: 'distance_to_goal'
     visible_radius: -1
     size: [ 7, 7 ]
 
   agent:
+    lr: 1e-3
     policy:
-      in_dim: ${trainer.env.obs_dim}
-      embd_vocab_size: 4
+      condition_on: 'sar'
       embd_dim: 64
       hidden_dim: 256
-      out_dim: 4
-      layers: 2
-      attn_heads: 4
-      scale: 1
-
-    lr: 1e-3
+      rnn:
+        layers: 2
+        attn_heads: 4
 
   teacher_agent:
-    policy:
-      in_dim: ${trainer.env.obs_dim}
-      embd_vocab_size: 4
-      embd_dim: 64
-      hidden_dim: 256
-      out_dim: 4
-      rnn_layers: 2
-      scale: 1
-    critic:
-      in_features: ${trainer.teacher_agent.policy.hidden_dim}
-      out_features: 1
-
     epsilon: 0.2
-    ppo_epochs: 4
+    ppo_epochs: 2
     num_minibatches: 2
-    value_loss_coef: 0.5
+    val_loss_coef: 0.5
     entropy_coef: 0.01
     max_grad_norm: 0.5
     gamma: 0.99
     tau: 0.95
     use_gae: False
     lr: 1e-3
+
+    policy:
+      condition_on: 's'
+      embd_dim: 64
+      hidden_dim: 256
+      rnn:
+        layers: 2
+
+    critic:
+      in_features: ${trainer.teacher_agent.policy.hidden_dim}
+      out_features: 1
+

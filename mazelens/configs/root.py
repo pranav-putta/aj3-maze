@@ -6,7 +6,7 @@ import torch
 from hydra.core.config_store import ConfigStore
 from omegaconf import MISSING, OmegaConf
 
-from mazelens.configs.agent import PPOAgentConfig, NetAgentConfig, BCAgentConfig
+from mazelens.configs.agent import PPOAgentConfig, NetAgentConfig, BCAgentConfig, BaseAgentConfig
 from mazelens.configs.env import AJ3MazeEnvConfig, DMMaze2DEnvConfig
 from mazelens.configs.net import LinearHeadConfig, ImpalaPolicyNetConfig, RNNStateEncoder, \
     TransformerStateEncoder
@@ -52,6 +52,7 @@ cs.store(name="base_config", node=Config)
 cs.store(group='env', name='base_aj3_maze', node=AJ3MazeEnvConfig)
 cs.store(group='env', name='base_dm_maze2d', node=DMMaze2DEnvConfig)
 
+cs.store(group='agent', name='base_agent', node=BaseAgentConfig)
 cs.store(group='agent', name='base_ppo_agent', node=PPOAgentConfig)
 cs.store(group='agent', name='base_bc_agent', node=BCAgentConfig)
 cs.store(group='agent', name='base_net_agent', node=NetAgentConfig)

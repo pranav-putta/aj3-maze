@@ -45,7 +45,6 @@ class PPOAgent(Agent):
 
     def after_step(self, x: ExperienceDict):
         x = super().after_step(x)
-        x.prev_hiddens = x.prev_hiddens.transpose(0, 1)
         return x
 
     def initialize_hidden(self, batch_size):

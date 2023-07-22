@@ -19,10 +19,7 @@ class RolloutEnvWrapper(gym.Wrapper):
                              prev_hiddens=agent.initialize_hidden(self.env.num_envs),
                              states=states,
                              infos=infos,
-                             actions=None,
-                             rewards=None,
-                             success=None,
-                             truncated=None)
+                             actions=None, rewards=None, success=None, truncated=None)
         storage = RolloutStorage(self.env.num_envs, *[f.name for f in fields(exp)])
         # Experience Tuples: (prev_done, prev_hidden, state, info, action, reward, success, truncated)
         for step in range(num_steps):
@@ -51,10 +48,9 @@ class RolloutEnvWrapper(gym.Wrapper):
                                  prev_hiddens=next_hidden,
                                  states=next_states,
                                  infos=next_infos,
-                                 actions=None,
-                                 rewards=None,
-                                 truncated=None,
-                                 success=None)
+                                 actions=actions,
+                                 rewards=rwds,
+                                 truncated=None, success=None)
 
         # insert the last incomplete experience tuple separately
         storage.last_exp = exp

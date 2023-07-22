@@ -80,6 +80,15 @@ class Agent(abc.ABC):
 
         x.prev_dones = torch.from_numpy(np.array(x.prev_dones)).to(self.device)
 
+        if x.actions is not None and not is_seq:
+            x.actions = torch.from_numpy(np.array(x.actions.cpu())).to(self.device)
+            x.actions = rearrange(x.actions, 'b ... -> b 1 ...')
+        if x.rewards is not None:
+            x.rewards = torch.from_numpy(np.array(x.rewards)).to(self.device)
+            x.rewards = rearrange(x.rewards, 'b ... -> b 1 ...')
+        if x.prev_hiddens is not None and type(x.prev_hiddens) == torch.Tensor:
+            x.prev_hiddens = x.prev_hiddens.to(self.device)
+
         return x
 
     def after_step(self, x: ExperienceDict):

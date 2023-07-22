@@ -3,6 +3,7 @@ defaults:
   - /base_config
   - /env@trainer.env: base_aj3_maze
   - /logger: base_wb_logger
+  - _self_
 
 exp_name: ${hydra:runtime.choices.experiment}
 logger:

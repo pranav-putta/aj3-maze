@@ -48,8 +48,8 @@ class AlgorithmicDistillationTrainer(Trainer):
             teacher_loss = self.teacher_agent.update(rollouts)
             loss = self.agent.update(rollouts)
 
-            self.logger.log({"student_loss": loss,
-                             "teacher_loss": teacher_loss})
+            self.logger.log({"teacher_loss": teacher_loss,
+                             "student_loss": loss})
 
             if (epoch + 1) % self.eval_frequency == 0:
                 teacher_stats = rollouts.compute_stats(0.99)

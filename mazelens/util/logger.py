@@ -38,5 +38,4 @@ class TextLogger(Logger):
         self.logger = logging.getLogger(__name__)
 
     def log(self, data):
-        print('waaaa')
         self.logger.info(data)
