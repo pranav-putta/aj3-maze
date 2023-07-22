@@ -1,4 +1,6 @@
 import logging
+
+import torch
 from omegaconf import OmegaConf
 
 import wandb
@@ -10,27 +12,23 @@ class Logger:
 
 
 class WandBLogger(Logger):
-    def __init__(self, project, name, group, tags, notes, should_log, cfg=None):
+    def __init__(self, project, name, group, tags, notes, cfg):
+        self.project = project
         self.name = name
         self.group = group
         self.tags = tags
         self.notes = notes
-        self.should_log = should_log
+        self.cfg = OmegaConf.to_container(cfg, resolve=True, throw_on_missing=True)
 
-        if self.name == 'None':
-            self.name = None
-
-        if self.should_log:
-            wandb.init(project=project,
-                       config=cfg,
-                       name=self.name,
-                       group=self.group,
-                       tags=self.tags,
-                       notes=self.notes)
+        wandb.init(project=self.project,
+                   config=self.cfg,
+                   name=self.name,
+                   group=self.group,
+                   tags=self.tags,
+                   notes=self.notes)
 
     def log(self, data):
-        if self.should_log:
-            wandb.log(data)
+        wandb.log(data)
 
 
 class TextLogger(Logger):

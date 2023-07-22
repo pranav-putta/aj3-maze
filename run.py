@@ -12,7 +12,7 @@ import wandb
 
 @hydra.main(version_base=None, config_path="configs", config_name="config")
 def run(cfg: Config) -> None:
-    logger = instantiate(cfg.logger, cfg=OmegaConf.to_container(cfg, resolve=True, throw_on_missing=True))
+    logger = instantiate(cfg.logger, cfg=cfg)
     trainer = instantiate(cfg.trainer, device=cfg.device, seed=cfg.seed, exp_dir=cfg.exp_dir,
                           exp_name=cfg.exp_name, logger=logger)
     stats = trainer.train()

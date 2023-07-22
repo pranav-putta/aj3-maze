@@ -20,8 +20,6 @@ class TransformerStateEncoder(StatefulNet):
             n_layer=layers,
             n_head=attn_heads,
             n_embd=hidden_dim,
-            obs_dim=hidden_dim,
-            mode='arbitrary'
         )
         self.action_head = nn.Linear(hidden_dim, hidden_dim)
         self.loss = FocalLoss(gamma=2, reduction='mean', ignore_index=4)
@@ -47,9 +45,9 @@ class TransformerStateEncoder(StatefulNet):
         # run transformer
         xs, hxs = [], []
         for b in range(B):
-            features = self.gpt(tokens=[x[b][None, :]], past_kv=hx[b], return_past_kv=True)
-            xs.append(features.logits)
-            hxs.append(features.keys_values)
+            x, hx = self.gpt(tokens=[x[b][None, :]], past_kv=hx[b], return_past_kv=True)
+            xs.append(x)
+            hxs.append(hx)
 
         x = torch.cat(xs, dim=0)
         hx = [[[hxs[b][l][k].detach() for b in range(B)] for k in range(2)] for l in range(L)]
@@ -74,8 +72,9 @@ class TransformerStateEncoder(StatefulNet):
             hx = rearrange(hx, 'B L K A H -> L K B A 1 H')
 
         # we're going to assume we start at a reset state, so past_kv is None
-        features = self.gpt(tokens=[x], past_kv=None, return_past_kv=True)
-        x, hx = features.logits, self.stack_hiddens_into_tensor(features.keys_values)
+        x, hx = self.gpt(tokens=[x], past_kv=None, return_past_kv=True)
+        hx = self.stack_hiddens_into_tensor(hx)
+
         if self.should_rebatch_inputs:
             x = unpad_sequence(x, lengths, batch_first=True)
             x = torch.cat(x, dim=0)

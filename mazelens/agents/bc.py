@@ -1,10 +1,8 @@
-from dataclasses import dataclass
 from typing import Any, Iterable, Tuple
 
 import torch
 from einops import rearrange
 from torch import nn
-from torch.distributions import Categorical
 
 from mazelens.agents.base_agent import Agent
 from mazelens.nets.base_net import Net
@@ -44,6 +42,7 @@ class BCAgent(Agent):
             return self.policy.rnn.initialize_hidden(batch_size)
 
     def act(self, x: ExperienceDict) -> Tuple[Iterable[int], Any]:
+        self.policy.eval()
         features, action_logits, hx = self.policy(x)
         actions, log_probs = self.sample_action(action_logits)
         return actions, hx

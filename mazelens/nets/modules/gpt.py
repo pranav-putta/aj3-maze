@@ -29,50 +29,10 @@ from torch.nn import functional as F
 
 logger = logging.getLogger(__name__)
 
-import numpy as np
-
-
-@dataclass
-class GPTOutput:
-    logits: torch.Tensor = None
-    keys_values: torch.Tensor = None
-
 
 class GELU(nn.Module):
     def forward(self, input):
         return F.gelu(input)
-
-
-class GPTConfig:
-    """ base GPT config, params common to all GPT versions """
-    embd_pdrop = 0.1
-    resid_pdrop = 0.1
-    attn_pdrop = 0.1
-
-    def __init__(self, vocab_size, block_size, **kwargs):
-        self.vocab_size = vocab_size
-        self.block_size = block_size
-        for k, v in kwargs.items():
-            setattr(self, k, v)
-
-
-class GPT1Config(GPTConfig):
-    """ GPT-1 like network roughly 125M params """
-    n_layer = 12
-    n_head = 12
-    n_embd = 768
-
-
-class BasicConfig:
-    n_embd = 512
-    n_head = 8
-    n_layer = 4
-    block_size = 1024
-    embd_pdrop = 0.1
-    resid_pdrop = 0.1
-    attn_pdrop = 0.1
-    vocab_size = 4
-    max_timestep = 256
 
 
 class CausalSelfAttention(nn.Module):
@@ -159,23 +119,19 @@ class Block(nn.Module):
 class GPT(nn.Module):
     """  the full GPT language model, with a context size of block_size """
 
-    def __init__(self, block_size=1024, max_timestep=500,
+    def __init__(self, block_size=1024,
                  n_layer=6,
                  n_head=4,
                  n_embd=512,
-                 num_actions=4,
                  embd_pdrop=0.1,
                  resid_pdrop=0.1,
-                 attn_pdrop=0.1,
-                 obs_dim=768,
-                 mode="obs"):
+                 attn_pdrop=0.1):
         super().__init__()
 
         self.pos_emb = nn.Parameter(torch.zeros(1, block_size + 1, n_embd))
         self.drop = nn.Dropout(embd_pdrop)
         self.n_embd = n_embd
         self.n_head = n_head
-        self.mode = mode
 
         # transformer
         self.blocks = nn.Sequential(*[Block(n_embd=n_embd,
@@ -186,18 +142,9 @@ class GPT(nn.Module):
                                       for _ in range(n_layer)])
         # decoder head
         self.ln_f = nn.LayerNorm(n_embd)
-        # self.head = nn.Linear(n_embd, num_actions)
 
         self.block_size = block_size
         self.apply(self._init_weights)
-
-        # logger.info("number of parameters: %e", sum(p.numel() for p in self.parameters()))
-
-        if "reward" in mode:
-            self.ret_emb = nn.Sequential(nn.Linear(1, n_embd), nn.Tanh())
-
-        self.obs_embedding = nn.Sequential(nn.Linear(obs_dim, n_embd), GELU())
-        nn.init.normal_(self.obs_embedding[0].weight, mean=0.0, std=0.02)
 
     def get_block_size(self):
         return self.block_size
@@ -263,26 +210,7 @@ class GPT(nn.Module):
                  torch.zeros(batch_size, self.n_head, 0, self.n_embd // self.n_head, device=self.pos_emb.device)) for _
                 in range(len(self.blocks))]
 
-    def forward_with_obs(self, observations, past_kv=None, return_past_kv=False):
-        B, T, _ = observations.shape
-        if past_kv is None:
-            past_kv = self.empty_key_values(B)
-
-        tokens_e = self.obs_embedding(observations)
-        past_length = past_kv[0][0].shape[-2]
-        pos_e = self.pos_emb[:, past_length:tokens_e.shape[1] + past_length, :]
-
-        new_key_values = []
-
-        x = self.drop(tokens_e + pos_e)
-        for i, (layer_past, block) in enumerate(zip(past_kv, self.blocks)):
-            x, (k, v) = block(x, layer_past=layer_past)
-            if return_past_kv:
-                new_key_values.append((k, v))
-        x = self.ln_f(x)
-        return GPTOutput(logits=x, keys_values=new_key_values)
-
-    def forward_arbitrary(self, tokens, past_kv=None, return_past_kv=False):
+    def forward(self, tokens, past_kv=None, return_past_kv=False):
         N = len(tokens)
         B, T, D = tokens[0].shape
 
@@ -301,13 +229,4 @@ class GPT(nn.Module):
             if return_past_kv:
                 new_key_values.append((k, v))
         x = self.ln_f(x)
-        # x = x.view(B, T, N, D).permute(2, 0, 1, 3)
-        return GPTOutput(logits=x, keys_values=new_key_values)
-
-    def forward(self, **kwargs):
-        if self.mode == 'obs':
-            return self.forward_with_obs(**kwargs)
-        elif self.mode == 'arbitrary':
-            return self.forward_arbitrary(**kwargs)
-        else:
-            raise NotImplementedError('Only obs mode is supported for now')
+        return x, new_key_values

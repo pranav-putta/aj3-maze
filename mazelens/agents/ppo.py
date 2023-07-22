@@ -52,6 +52,7 @@ class PPOAgent(Agent):
             return self.policy.rnn.initialize_hidden(batch_size).to(self.device)
 
     def act(self, x: ExperienceDict) -> Tuple[Iterable[int], Any]:
+        self.policy.eval()
         features, action_logits, hx = self.policy(x)
         actions, log_probs = self.sample_action(action_logits)
 
@@ -81,6 +82,7 @@ class PPOAgent(Agent):
         return value
 
     def update(self, rollouts: RolloutStorage):
+        self.policy.train()
         batch = rollouts.to_tensordict()
         batch = batch.apply(lambda x: x.to(self.device))
 

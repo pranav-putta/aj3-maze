@@ -15,7 +15,7 @@ from mazelens.configs.trainer import BaseTrainerConfig, AlgorithmicDistillationT
 
 @dataclass(kw_only=True)
 class LoggerConfig:
-    should_log: bool = True
+    _recursive_: bool = False
     project: str = 'mazelens'
     name: Optional[str] = MISSING
     group: str = MISSING

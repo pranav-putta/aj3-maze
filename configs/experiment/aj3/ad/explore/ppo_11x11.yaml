@@ -4,11 +4,14 @@ defaults:
   - aj3/ad/base_ad
   - _self_
 
+logger:
+  notes: "Initial exploration experiments with an 11x11 maze, visible_radius=2, condition_on='s', mode='rebatch'"
+
 trainer:
   env:
     static_episode: False
-    size: [ 9, 9 ]
-    difficulty: 'hard'
+    size: [ 11, 11 ]
+    difficulty: null
     visible_radius: 2
 
   epochs: 10000
@@ -22,14 +25,14 @@ trainer:
     max_grad_norm: 0.7
     lr: 2.5e-4
     policy:
-      embd_dim: 32
+      embd_dim: 64
       hidden_dim: 256
       rnn:
         layers: 2
 
   agent:
-    lr: 1e-3
+    lr: 2.5e-4
     policy:
-      condition_on: 'sar'
-      rnn:
-        mode: "continuous"
+      condition_on: 's'
+#      rnn:
+#        mode: "continuous"
