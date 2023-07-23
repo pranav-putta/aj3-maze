@@ -15,7 +15,7 @@ from mazelens.util.structs import ExperienceDict
 class BCAgent(Agent):
     policy: Net
 
-    def __init__(self, lr, max_grad_norm, device, policy, optim, wd, **kwargs):
+    def __init__(self, lr, max_grad_norm, device, policy, optim, wd, lr_decay, **kwargs):
         super().__init__(**kwargs)
         self.policy = policy
 
@@ -25,7 +25,7 @@ class BCAgent(Agent):
         self.max_grad_norm = max_grad_norm
 
         self.optimizer = construct_optimizer(self.parameters(), optim, self.lr, wd)
-        self.scheduler = torch.optim.lr_scheduler.ExponentialLR(self.optimizer, gamma=0.99)
+        self.scheduler = torch.optim.lr_scheduler.ExponentialLR(self.optimizer, gamma=lr_decay)
 
         self.device = device
         self.criterion = FocalLoss(gamma=2.0, ignore_index=4)

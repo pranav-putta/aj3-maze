@@ -18,7 +18,11 @@ class BaseAgentConfig:
 @dataclass(kw_only=True)
 class NetAgentConfig(BaseAgentConfig):
     """ Agent config for neural network policies """
-    pass
+    optim: str = 'adamw'
+    lr: float = 1e-4
+    lr_decay: float = 0.99
+    wd: float = 0.1
+    max_grad_norm: float = 0.5
 
 
 @dataclass(kw_only=True)
@@ -32,24 +36,13 @@ class PPOAgentConfig(NetAgentConfig):
     num_minibatches: int = 2
     val_loss_coef: float = 0.5
     entropy_coef: float = 0.01
-    max_grad_norm: float = 0.5
     gamma: float = 0.99
     tau: float = 0.95
     use_gae: bool = True
 
-    optim: str = 'adamw'
-    lr: float = 1e-4
-    wd: float = 0.1
-
 
 @dataclass(kw_only=True)
-class BCAgentConfig(BaseAgentConfig):
+class BCAgentConfig(NetAgentConfig):
     """ BC agent specific config """
     _target_: str = 'mazelens.agents.bc.BCAgent'
     policy: BaseNetConfig = MISSING
-
-    optim: str = 'adamw'
-    lr: float = 1e-4
-    wd: float = 0.1
-
-    max_grad_norm: float = 0.5

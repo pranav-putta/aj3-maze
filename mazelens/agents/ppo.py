@@ -19,13 +19,14 @@ class PPOAgent(Agent):
     def __init__(self, policy=None, critic=None, action_space=None, observation_space=None, deterministic=False,
                  epsilon=None, ppo_epochs=None, num_minibatches=None, val_loss_coef=None, entropy_coef=None,
                  max_grad_norm=None, lr=None, gamma=None, tau=None, use_gae=None, device=None, optim=None, wd=None,
+                 lr_decay=None,
                  **kwargs):
         super().__init__(action_space, observation_space, deterministic, device)
         self.policy = policy
         self.critic = critic
 
         self.optimizer = construct_optimizer(self.parameters(), optim, lr, wd)
-        self.scheduler = torch.optim.lr_scheduler.ExponentialLR(self.optimizer, gamma=0.99)
+        self.scheduler = torch.optim.lr_scheduler.ExponentialLR(self.optimizer, gamma=lr_decay)
 
         self.epsilon = epsilon
         self.ppo_epochs = ppo_epochs
