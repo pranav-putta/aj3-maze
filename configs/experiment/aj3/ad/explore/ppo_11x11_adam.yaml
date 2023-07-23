@@ -5,12 +5,13 @@ defaults:
   - _self_
 
 logger:
-  notes: "Initial exploration experiments with an 11x11 maze, visible_radius=2, condition_on='s', mode='rebatch'"
+  notes: "Investigating configurations of optimizer for BC to transformer"
 
 trainer:
   epochs: 10000
   eval_frequency: 50
   num_rollout_steps: 100
+  num_environments: 24
 
   env:
     static_episode: False
@@ -27,8 +28,8 @@ trainer:
     entropy_coef: 0.1
     max_grad_norm: 0.7
     lr: 2.5e-4
-    optim: 'adamw'
-    wd: 0.01
+    optim: 'adam'
+    wd: 0.0
     policy:
       embd_dim: 64
       hidden_dim: 256
@@ -37,8 +38,9 @@ trainer:
 
   agent:
     lr: 2.5e-4
-    optim: 'adamw'
-    wd: 0.01
+    optim: 'adam'
+    wd: 0.0
+    max_grad_norm: 1.0
     policy:
       condition_on: 's'
       rnn:

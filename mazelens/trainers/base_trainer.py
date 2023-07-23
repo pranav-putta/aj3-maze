@@ -42,7 +42,8 @@ class Trainer:
         self.base_env = self.env_f(seed=self.seed)
         self.agent = self.agent_f(action_space=self.base_env.action_space,
                                   observation_space=self.base_env.observation_space,
-                                  device=self.device)
+                                  device=self.device,
+                                  epochs=self.epochs)
 
         os.makedirs(os.path.join(self.exp_dir, 'checkpoints'), exist_ok=True)
         os.makedirs(os.path.join(self.exp_dir, 'videos'), exist_ok=True)

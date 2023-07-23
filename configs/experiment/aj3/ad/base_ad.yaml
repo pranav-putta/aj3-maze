@@ -30,6 +30,8 @@ trainer:
     size: [ 7, 7 ]
 
   agent:
+    optim: 'adamw'
+    wd: 0.1
     lr: 1e-3
     policy:
       condition_on: 'sar'
@@ -47,11 +49,15 @@ trainer:
     tau: 0.95
     use_gae: False
     lr: 1e-3
+    optim: 'adamw'
+    wd: 0.001
+
 
     policy:
       condition_on: 's'
       embd_dim: 64
       hidden_dim: 256
+
       rnn:
         layers: 2
 

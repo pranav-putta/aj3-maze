@@ -42,5 +42,5 @@ trainer:
     policy:
       condition_on: 's'
       rnn:
-        n_layers: 2
+        n_layers: 1
         mode: 'rebatch'

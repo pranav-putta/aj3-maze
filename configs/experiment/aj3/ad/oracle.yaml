@@ -33,8 +33,4 @@ trainer:
       condition_on: 's'
       embd_dim: 64
       hidden_dim: 256
-      rnn:
-        layers: 2
-        attn_heads: 4
-        mode: 'rebatch'
 

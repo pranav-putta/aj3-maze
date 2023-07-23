@@ -23,7 +23,6 @@ class HookedTransformerStateEncoder(StatefulNet):
             'normalization_type': 'LNPre',
             'n_ctx': n_ctx
         })
-        self.loss = FocalLoss(gamma=2, reduction='mean', ignore_index=4)
         self.mode = mode
 
     @property

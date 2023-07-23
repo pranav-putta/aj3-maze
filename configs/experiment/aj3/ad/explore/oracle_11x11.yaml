@@ -1,0 +1,30 @@
+# @package _global_
+
+defaults:
+  - aj3/ad/oracle
+  - _self_
+
+logger:
+  notes: "Can we BC an oracle into a transformer for this task?"
+
+trainer:
+  epochs: 10000
+  eval_frequency: 50
+  num_rollout_steps: 100
+
+  env:
+    static_episode: False
+    size: [ 11, 11 ]
+    difficulty: null
+    visible_radius: 2
+    max_steps: 100
+
+  agent:
+    lr: 2.5e-4
+    optim: 'adam'
+    wd: 0.0
+    policy:
+      condition_on: 's'
+      rnn:
+        n_layers: 2
+        mode: 'rebatch'

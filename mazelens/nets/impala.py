@@ -8,7 +8,8 @@ from mazelens.util.structs import ExperienceDict
 
 
 class ImpalaPolicyNet(Net):
-    def __init__(self, in_dim, embd_vocab_size, embd_dim, hidden_dim, scale, out_dim, condition_on, rnn: StatefulNet):
+    def __init__(self, in_dim, embd_vocab_size, embd_dim, hidden_dim,
+                 scale, out_dim, condition_on, rnn: StatefulNet):
         super().__init__()
         self.impala = ImpalaModel(embd_dim, in_dim, hidden_dim, scale)
         self.rnn = rnn

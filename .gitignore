@@ -5,3 +5,7 @@ mazelens.egg-info/
 outputs
 wandb
 __pycache__/
+notebooks/imgs
+notebooks/episode*
+notebooks/.ipynb_checkpoints
+experiments/

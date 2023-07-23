@@ -1,0 +1,30 @@
+# @package _global_
+
+defaults:
+  - /experiment/aj3/ppo/base_ppo
+
+trainer:
+  num_rollout_steps: 50
+
+  env:
+    size: [ 7, 7 ]
+    static_episode: False
+    difficulty: null
+    visible_radius: 2
+
+  agent:
+    policy:
+      embd_dim: 32
+      hidden_dim: 256
+      rnn:
+        layers: 2
+    epsilon: 0.2
+    ppo_epochs: 2
+    num_minibatches: 2
+    optim: 'adamw'
+    wd: 0.1
+
+    val_loss_coef: 0.4
+    entropy_coef: 0.1
+    max_grad_norm: 0.75
+    lr: 2.5e-4

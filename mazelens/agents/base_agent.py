@@ -15,11 +15,13 @@ class Agent(abc.ABC):
     Abstract class for all agents.
     """
 
-    def __init__(self, action_space=None, observation_space=None, deterministic=None, device=None, **kwargs):
+    def __init__(self, action_space=None, observation_space=None, deterministic=None, device=None, epochs=None,
+                 **kwargs):
         self.action_space = action_space
         self.observation_space = observation_space
         self.deterministic = deterministic
         self.device = device
+        self.epochs = epochs
 
     def sample_action(self, action_logits):
         dist = Categorical(logits=action_logits)

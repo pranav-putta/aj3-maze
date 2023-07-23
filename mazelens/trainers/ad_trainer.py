@@ -28,7 +28,8 @@ class AlgorithmicDistillationTrainer(Trainer):
         super().init_train()
         self.teacher_agent = self.teacher_agent_f(action_space=self.base_env.action_space,
                                                   observation_space=self.base_env.observation_space,
-                                                  device=self.device)
+                                                  device=self.device,
+                                                  epochs=self.epochs)
         self.teacher_agent.to(self.device)
 
         if self.teacher_agent.parameters() is not None:

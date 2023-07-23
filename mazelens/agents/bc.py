@@ -7,6 +7,7 @@ from torch import nn
 from mazelens.agents.base_agent import Agent
 from mazelens.nets.base_net import Net
 from mazelens.nets.modules.focal_loss import FocalLoss
+from mazelens.util import construct_optimizer
 from mazelens.util.storage import RolloutStorage
 from mazelens.util.structs import ExperienceDict
 
@@ -14,7 +15,7 @@ from mazelens.util.structs import ExperienceDict
 class BCAgent(Agent):
     policy: Net
 
-    def __init__(self, lr, max_grad_norm, device, policy, **kwargs):
+    def __init__(self, lr, max_grad_norm, device, policy, optim, wd, **kwargs):
         super().__init__(**kwargs)
         self.policy = policy
 
@@ -22,7 +23,10 @@ class BCAgent(Agent):
 
         self.lr = lr
         self.max_grad_norm = max_grad_norm
-        self.optimizer = torch.optim.Adam(self.parameters(), lr=lr)
+
+        self.optimizer = construct_optimizer(self.parameters(), optim, self.lr, wd)
+        self.scheduler = torch.optim.lr_scheduler.ExponentialLR(self.optimizer, gamma=0.99)
+
         self.device = device
         self.criterion = FocalLoss(gamma=2.0, ignore_index=4)
 
@@ -71,6 +75,7 @@ class BCAgent(Agent):
 
         nn.utils.clip_grad_norm_(self.parameters(), self.max_grad_norm)
         self.optimizer.step()
+        self.scheduler.step()
         return loss.item()
 
     def to(self, device):

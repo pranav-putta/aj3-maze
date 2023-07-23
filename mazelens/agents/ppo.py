@@ -1,16 +1,13 @@
-from dataclasses import dataclass
 from typing import Tuple, Iterable, Any
 
 import torch
 import torch.nn.functional as F
-from einops import rearrange
-from tensordict import TensorDict
 from torch import nn
 from torch.distributions import Categorical
 
 from mazelens.agents.base_agent import Agent
 from mazelens.nets.base_net import Net
-from mazelens.util import compute_returns
+from mazelens.util import compute_returns, construct_optimizer
 from mazelens.util.storage import RolloutStorage
 from mazelens.util.structs import ExperienceDict
 
@@ -21,12 +18,15 @@ class PPOAgent(Agent):
 
     def __init__(self, policy=None, critic=None, action_space=None, observation_space=None, deterministic=False,
                  epsilon=None, ppo_epochs=None, num_minibatches=None, val_loss_coef=None, entropy_coef=None,
-                 max_grad_norm=None, lr=None, gamma=None, tau=None, use_gae=None, device=None):
+                 max_grad_norm=None, lr=None, gamma=None, tau=None, use_gae=None, device=None, optim=None, wd=None,
+                 **kwargs):
         super().__init__(action_space, observation_space, deterministic, device)
         self.policy = policy
         self.critic = critic
 
-        self.optimizer = torch.optim.Adam(self.parameters(), lr=lr)
+        self.optimizer = construct_optimizer(self.parameters(), optim, lr, wd)
+        self.scheduler = torch.optim.lr_scheduler.ExponentialLR(self.optimizer, gamma=0.99)
+
         self.epsilon = epsilon
         self.ppo_epochs = ppo_epochs
         self.num_minibatches = num_minibatches
@@ -132,6 +132,8 @@ class PPOAgent(Agent):
 
                 avg_actor_loss += actor_loss.item()
                 avg_critic_loss += critic_loss.item()
+
+        # self.scheduler.step()
 
         avg_actor_loss /= self.ppo_epochs * self.num_minibatches
         avg_critic_loss /= self.ppo_epochs * self.num_minibatches

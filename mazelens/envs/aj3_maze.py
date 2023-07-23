@@ -246,10 +246,14 @@ class AJ3MazeEnv(Env):
         # 1. find all free positions and place objects in random spots
         indices = np.argwhere(self.maze.grid == 0)
         indices = indices.tolist()
+
         if self.static_episode:
             random.seed(self.seed)
+        elif 'episode_seed' in kwargs and kwargs['episode_seed'] is not None:
+            random.seed(kwargs['episode_seed'])
         else:
             random.seed(time.time())
+
         random.shuffle(indices)
 
         for i, obj in enumerate(self.maze.objects):

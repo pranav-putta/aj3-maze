@@ -36,7 +36,10 @@ class PPOAgentConfig(NetAgentConfig):
     gamma: float = 0.99
     tau: float = 0.95
     use_gae: bool = True
+
+    optim: str = 'adamw'
     lr: float = 1e-4
+    wd: float = 0.1
 
 
 @dataclass(kw_only=True)
@@ -44,5 +47,9 @@ class BCAgentConfig(BaseAgentConfig):
     """ BC agent specific config """
     _target_: str = 'mazelens.agents.bc.BCAgent'
     policy: BaseNetConfig = MISSING
+
+    optim: str = 'adamw'
     lr: float = 1e-4
+    wd: float = 0.1
+
     max_grad_norm: float = 0.5

@@ -108,3 +108,15 @@ def shift_tensor_sequence(x, fill_value, dim):
     slice_idx = [slice(None)] * dim + [slice(0, 1)]
     fill = torch.full_like(x[slice_idx], fill_value)
     return torch.cat([fill, x[:-1]], dim=dim)
+
+
+def construct_optimizer(params, optimizer_type, lr, weight_decay):
+    if optimizer_type == "adam":
+        optimizer = torch.optim.Adam(params, lr=lr, weight_decay=weight_decay)
+    elif optimizer_type == "adamw":
+        optimizer = torch.optim.AdamW(params, lr=lr, weight_decay=weight_decay)
+    elif optimizer_type == "sgd":
+        optimizer = torch.optim.SGD(params, lr=lr, weight_decay=weight_decay)
+    else:
+        raise ValueError(f"Unknown optimizer type {optimizer_type}")
+    return optimizer
