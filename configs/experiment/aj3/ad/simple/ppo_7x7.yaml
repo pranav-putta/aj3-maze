@@ -1,25 +1,23 @@
 # @package _global_
 
 defaults:
-  - aj3/ad/base_ad
+  - aj3/ad/simple/base_simple
   - _self_
 
 logger:
-  notes: "PPO 11x11 AD with random envs"
+  notes: "Simple, no convolution embedding network."
 
 trainer:
-  epochs: 10000
+  epochs: 1000
   eval_frequency: 50
-  num_rollout_steps: 100
-  num_environments: 24
+  num_rollout_steps: 50
 
   env:
-    static_env: True
     static_episode: False
-    size: [ 11, 11 ]
+    size: [ 7, 7 ]
     difficulty: null
     visible_radius: 2
-    max_steps: 100
+    max_steps: 50
 
   teacher_agent:
     epsilon: 0.2
@@ -38,13 +36,13 @@ trainer:
         layers: 2
 
   agent:
-    lr: 1e-3
-    lr_decay: 0.9999
-    optim: 'adamw'
-    wd: 0.001
+    lr: 2.5e-4
+    lr_decay: 1.0
+    optim: 'adam'
+    wd: 0.0
     max_grad_norm: 1.0
     policy:
-      condition_on: 'sar'
+      condition_on: 's'
       rnn:
         n_layers: 2
-        mode: 'continuous'
+        mode: 'rebatch'

@@ -5,7 +5,7 @@ defaults:
   - _self_
 
 logger:
-  notes: "PPO 11x11 AD with random envs"
+  notes: "Investigating configurations of optimizer for BC to transformer"
 
 trainer:
   epochs: 10000
@@ -14,7 +14,6 @@ trainer:
   num_environments: 24
 
   env:
-    static_env: True
     static_episode: False
     size: [ 11, 11 ]
     difficulty: null
@@ -44,7 +43,7 @@ trainer:
     wd: 0.001
     max_grad_norm: 1.0
     policy:
-      condition_on: 'sar'
+      condition_on: 's'
       rnn:
         n_layers: 2
-        mode: 'continuous'
+        mode: 'rebatch'

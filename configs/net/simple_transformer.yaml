@@ -1,5 +1,5 @@
 defaults:
-  - base_impala_net
+  - base_simple_net
   - /net@rnn: base_hooked_transformer_state_encoder
 
 
@@ -9,13 +9,12 @@ out_dim: 4
 embd_dim: 8
 hidden_dim: 32
 
-scale: 1
 rnn:
   n_layers: 2
   d_model: ${..hidden_dim}
   d_head: 64
   n_heads: 8
-  n_ctx: 1024
+  n_ctx: 4096
   d_mlp: ${..hidden_dim}
 
   mode: "rebatch"

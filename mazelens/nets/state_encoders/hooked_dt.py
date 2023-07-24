@@ -42,6 +42,8 @@ class HookedTransformerStateEncoder(StatefulNet):
 
         xs, hxs = [], []
         for b in range(B):
+            if done_mask[b]:
+                hx[b] = self.initialize_hidden(1)
             x_b = self.gpt(x[b:b + 1], past_kv_cache=hx[b])
             xs.append(x_b)
 

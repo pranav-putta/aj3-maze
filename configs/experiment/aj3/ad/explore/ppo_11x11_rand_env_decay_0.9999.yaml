@@ -14,7 +14,7 @@ trainer:
   num_environments: 24
 
   env:
-    static_env: True
+    static_env: False
     static_episode: False
     size: [ 11, 11 ]
     difficulty: null
@@ -29,6 +29,7 @@ trainer:
     entropy_coef: 0.1
     max_grad_norm: 0.7
     lr: 2.5e-4
+    lr_decay: 0.9999
     optim: 'adam'
     wd: 0.0
     policy:
@@ -44,7 +45,7 @@ trainer:
     wd: 0.001
     max_grad_norm: 1.0
     policy:
-      condition_on: 'sar'
+      condition_on: 's'
       rnn:
         n_layers: 2
-        mode: 'continuous'
+        mode: 'rebatch'
